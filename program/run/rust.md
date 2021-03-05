@@ -56,7 +56,7 @@ brew install rust
 
 
 
-```
+```shell
 brew install rust
 ```
 
@@ -88,7 +88,7 @@ Bash completion has been installed to:
 
 
 
-```
+```shell
 Rust's package manager
 
 USAGE:
@@ -129,6 +129,28 @@ See 'cargo help <command>' for more information on a specific command.
 
 
 无需弄懂所有的命令。只需要知道常用的命令即可。build 和 run 命令很重要。
+
+
+
+继续看官网文档：
+
+```
+Let’s write a small application with our new Rust development environment. To start, we’ll use Cargo to make a new project for us. In your terminal of choice run:
+
+cargo new hello-rust
+
+This will generate a new directory called hello-rust with the following files:
+
+hello-rust
+|- Cargo.toml
+|- src
+  |- main.rs
+Cargo.toml is the manifest file for Rust. It’s where you keep metadata for your project, as well as dependencies.
+
+src/main.rs is where we’ll write our application code.
+```
+
+这讲述了如何创建项目。
 
 
 
