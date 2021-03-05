@@ -14,8 +14,8 @@
 
 * [解谜计算机科学](./program/calculate/calculate.md) 
 * [作业1](./program/calculate/exercise.md)
-* [搭建编程环境](./program/run/run.md)
-* 
+* [搭建编程环境](./program/tools/tools.md)
+* [运行 Rust 程序](./program/run/rust.md)
 * [其它](./outline.md)
 
 
