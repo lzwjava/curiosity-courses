@@ -13,7 +13,7 @@
 
 
 * [解谜计算机科学](./program/calculate.md) 
-* [作业1](calculate_e.md)
+* [作业1](./program/calculate_e.md)
 * [其它](./exercise/outline.md)
 
 
