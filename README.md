@@ -12,8 +12,8 @@
 
 
 
-* [解谜计算机科学](./program/calculate.md) 
-* [作业1](./program/calculate_e.md)
+* [解谜计算机科学](./program/calculate/calculate.md) 
+* [作业1](./program/calculate/exercise.md)
 * [其它](./exercise/outline.md)
 
 
