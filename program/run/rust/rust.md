@@ -34,7 +34,7 @@ brew install rust
 
 
 
-官方网站上说，
+官方网站上说：
 
 
 
