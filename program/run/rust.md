@@ -150,6 +150,7 @@ Cargo.toml is the manifest file for Rust. It’s where you keep metadata for you
 src/main.rs is where we’ll write our application code.
 ```
 
+<<<<<<< HEAD
 这讲述了如何创建项目。接下来便创建。
 
 
@@ -279,6 +280,4 @@ cargo build
 
 
 我们已经把Rust程序跑起来了。后面便是熟悉更多的Rust语言语法，来在Rust中找到我们在「解谜计算机科学」上讲述的变量、函数、函数调用和表达式等概念所对应的符号表示。
-
-
 
