@@ -12,10 +12,10 @@
 
 
 
-* [解谜计算机科学](./program/calculate/calculate.md) 
-* [作业1](./program/calculate/exercise.md)
-* [搭建编程环境](./program/tools/tools.md)
-* [运行 Rust 程序](./program/run/rust.md)
+* [解谜计算机科学](./calculate/calculate.md) 
+* [作业1](./calculate/exercise.md)
+* [搭建编程环境](./tools/tools.md)
+* [运行 Rust 程序](./run/rust.md)
 * [其它](./outline.md)
 
 
