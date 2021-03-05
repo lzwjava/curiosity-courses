@@ -56,7 +56,7 @@ brew install rust
 
 
 
-```
+```shell
 brew install rust
 ```
 
@@ -88,7 +88,7 @@ Bash completion has been installed to:
 
 
 
-```
+```shell
 Rust's package manager
 
 USAGE:
@@ -129,6 +129,156 @@ See 'cargo help <command>' for more information on a specific command.
 
 
 无需弄懂所有的命令。只需要知道常用的命令即可。build 和 run 命令很重要。
+
+
+
+继续看官网文档：
+
+```
+Let’s write a small application with our new Rust development environment. To start, we’ll use Cargo to make a new project for us. In your terminal of choice run:
+
+cargo new hello-rust
+
+This will generate a new directory called hello-rust with the following files:
+
+hello-rust
+|- Cargo.toml
+|- src
+  |- main.rs
+Cargo.toml is the manifest file for Rust. It’s where you keep metadata for your project, as well as dependencies.
+
+src/main.rs is where we’ll write our application code.
+```
+
+这讲述了如何创建项目。接下来便创建。
+
+
+
+```shell
+cargo new hello-rust
+
+Created binary (application) `hello-rust` package
+```
+
+
+
+我们用 VSCode来打开项目。
+
+
+
+main.rs:
+
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+
+
+接下来，很自然想到要build以及run程序。
+
+
+
+```shell
+cargo build
+
+error: could not find `Cargo.toml` in `/Users/lzw/ideas/curious-courses/program/run/rust` or any parent directory
+```
+
+
+
+出错了。为什么。这表明cargo只能在项目下的目录运行。接下来进入子目录，运行了`cd hello-rust`。
+
+
+
+这时，想如果直接运行，会怎么样。
+
+
+
+```shell
+cargo run
+   
+   Compiling hello-rust v0.1.0 (/Users/lzw/ideas/curious-courses/program/run/rust/hello-rust)
+    Finished dev [unoptimized + debuginfo] target(s) in 4.43s
+     Running `target/debug/hello-rust`
+Hello, world!
+```
+
+
+
+好了，成功了。输出了字符串，程序开始工作啦。
+
+
+
+试着改动程序。
+
+
+
+```rust
+fn main() {
+    println!(2+3);
+}
+```
+
+
+
+`cargo run`之后，出现了：
+
+
+
+```
+   Compiling hello-rust v0.1.0 (/Users/lzw/ideas/curious-courses/program/run/rust/hello-rust)
+error: format argument must be a string literal
+ --> src/main.rs:2:14
+  |
+2 |     println!(2+3);
+  |              ^^^
+  |
+help: you might be missing a string literal to format with
+  |
+2 |     println!("{}", 2+3);
+  |              ^^^^^
+
+error: aborting due to previous error
+
+error: could not compile `hello-rust`
+
+To learn more, run the command again with --verbose.
+```
+
+
+
+还没学习任何Rust语法。凭着我们的直觉来改动代码出错了。这个出错提示很好，已经告诉我们怎么改了。
+
+
+
+```rust
+fn main() {
+    println!("{}", 2+3);
+}
+```
+
+
+
+这次改对了，果然输出了5。
+
+
+
+对了，build会怎么样。
+
+```
+cargo build
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+```
+
+
+
+为什么要有build呢。因为有可能我们只是想生成可执行程序，而并不想执行。也许对于一些庞大的程序，执行是费时的。也许我们想本地生成，然后传输到远程服务器去执行。
+
+
+
+我们已经把Rust程序跑起来了。后面便是熟悉更多的Rust语言语法，来在Rust中找到我们在「解谜计算机科学」上讲述的变量、函数、函数调用和表达式等概念所对应的符号表示。
 
 
 
