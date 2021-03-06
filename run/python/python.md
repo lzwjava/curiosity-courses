@@ -1,4 +1,4 @@
-# 运行 Python 程序
+#  试用 Python 编程
 
 
 
@@ -30,6 +30,128 @@ Type "help", "copyright", "credits" or "license" for more information.
 这里打印了当前Python编译器的一些基本信息和帮助信息。
 
 
+
+试试输入一些命令。
+
+```python
+>>> 2+3
+5
+```
+
+```python
+>>> 8*(2+3)
+40
+```
+
+是不是这又很像终端命令行。
+
+```python
+>>> 2+
+  File "<stdin>", line 1
+    2+
+      ^
+SyntaxError: invalid syntax
+```
+
+出错了。告诉我们这是无效的语法。 在文件 stdin 的第一行出错了。这是什么意思。可能这个交互编程环境，Python把每一行命令封装成一个文件，然后提供一些基本的依赖库，接着来运行。stdin是standard input 的意思，即是标准输入的意思。
+
+
+
+继续玩。
+
+```python
+>>> a=3
+>>> a+5
+8
+```
+
+说明它支持变量。
+
+
+
+怎么退出这个交互命令行呢。这样来：
+
+```python
+>>> exit()
+```
+
+
+
+那能不能先写成一个文件，再运行呢。试试看。我们用VSCode来写几行代码。
+
+
+
+创建一个`main.py`的文件。随便写点啥吧。
+
+```python
+2+3
+```
+
+那怎么运行呢。
+
+
+
+试试看在终端用`python`运行这个文件，也就是把这个文件名当做参数传递给Python编译器，看看如何。
+
+```shell
+$ python main.py
+```
+
+什么也没有，什么也看不到。再改一改。
+
+
+
+main.py：
+
+```python
+println(2+3)
+```
+
+```shell
+$ python main.py
+Traceback (most recent call last):
+  File "/Users/lzw/curious-courses/run/python/hello-python/main.py", line 1, in <module>
+    println(2+3)
+NameError: name 'println' is not defined
+```
+
+出错了。println是我在其它语言看到的。这里也可能是我们网上查到的。总之随便试一试。错误信息是说，`println`没有被定义。
+
+
+
+再试试改改。
+
+
+
+main.py：
+
+```
+print(2+3)
+```
+
+```
+$ python main.py
+5
+```
+
+成功了！继续玩玩。
+
+
+
+main.py：
+
+```python
+print("hello")
+```
+
+```
+$ python main.py
+hello
+```
+
+
+
+嗯。我们用Python语言写了一些代码，接着用Python编译器来执行了这些代码。也可以说我们把Python程序
 
 
 
