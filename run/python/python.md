@@ -445,8 +445,6 @@ while i < 100:
 
 结果输出了一大堆`0`。为什么。原来是在`while`里`i`没有加1。加上后。运行一下。
 
-
-
 ```python
 def f(n):
   if n < 2:
@@ -522,4 +520,60 @@ $ python fi.py
 $ python fi.py
 0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181
 ```
+
+继续改。简单查阅后，发现是这样来得到。
+
+```python
+i = input("n:")
+while i < 20:   
+  print(f(i), end=" ")
+  i = i + 1
+```
+
+很遗憾报错了。
+
+```shell
+$ python fi.py
+n:10
+Traceback (most recent call last):
+  File "fi.py", line 8, in <module>
+    while i < 20:
+TypeError: '<' not supported between instances of 'str' and 'int'
+```
+
+这说明 `i`这里被当成了字符串。字符串无法和数字进行比较。
+
+```python
+i = input("n:")
+i = int(i)
+```
+
+改成这样，试试看。好了。
+
+```python
+$ python fi.py
+n:10
+55 89 144 233 377 610 987 1597 2584 4181$
+```
+
+然而当这样的时候，输出完结果后，总是立马跟着`$`。我们需要最后再打印一个空行。
+
+```python
+i = input("n:")
+i = int(i)
+while i < 20:   
+  print(f(i), end=" ")
+  i = i + 1
+
+print()
+```
+
+```python
+$ python fi.py
+n:10
+55 89 144 233 377 610 987 1597 2584 4181
+$
+```
+
+嗯，这样就美观很多了。
 
