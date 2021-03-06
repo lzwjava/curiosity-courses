@@ -155,8 +155,245 @@ hello
 
 
 
-### 练习
+***
+
+### 小练习
 
 * 试着像本文一样，学生在自己电脑上试用Python编程。
 * 练习完后，可提交一百字以内的总结或对本文的补充。
+
+***
+
+
+
+接着来实现一些优雅的程序，来熟悉Python编程语言。咱们设计这样一个程序。来打印斐波那契数列的第n位。
+
+
+
+斐波那契数列的定义是说，一开始两个数字是0和1。接下来的每个数都是前面两个数之和。那这个数列将会是0、1、1、2、3、5、8、13、21……
+
+
+
+用数学上的表示即是说，用n来表示序号。当 n>2时，f(n) = f(n-1) + f(n-2)。f(1)=0，f(2)=1。这里用递归的方式来实现这个程序。
+
+
+
+可见要用到函数。Python的函数是怎样的呢。
+
+```shell
+# Python 3: Fibonacci series up to n
+>>> def fib(n):
+>>>     a, b = 0, 1
+>>>     while a < n:
+>>>         print(a, end=' ')
+>>>         a, b = b, a+b
+>>>     print()
+>>> fib(1000)
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+```
+
+Python官网给的第一个程序就告诉了我们。可见函数是这样的。
+
+```python
+def fib(n):
+  0
+```
+
+嗯，运行一下，没什么问题。如果`0`也不写，会怎样。
+
+```shell
+  File "./fi.py", line 4
+
+    ^
+IndentationError: expected an indented block
+```
+
+出错了，说是`IndentationError`，缩进错误。Python 里缩进很重要。编译也会去检查缩进。因为Python的语言语法很简洁。但这种简洁会有时候导致一些混淆，所以得借助代码里的空格等缩进来告诉编译器该怎么理解程序。
+
+
+
+像上面的程序。`while`中有两行代码。`print()`这行代码是在`while`之外的。如果在`print()`前面加上几个空格，这行语句就到`while`里面去了。可见很多时候Python语言里，对于代码块，没有一个结束标志的符号，没有类似`}`的符号。所以只能借助缩进来区分代码块。
+
+
+
+`a, b = 0, 1`表明可以在一行连续对两个变量赋值。`print(a, end=' ')`表明每次打印完`a`之后，再打印一个空格。`print()`是什么意思。似乎是说在打印`换行符`。
+
+
+
+接着写我们的斐波那契数列程序。
+
+```python
+def fib(n):
+  fib(n-1) + fib(n-2)
+```
+
+先写这部分。接着来打印一个序号的数字吧。
+
+```python
+def fib(n):
+  fib(n-1) + fib(n-2)
+  
+print(fib(10))
+```
+
+程序会怎么运行。似乎程序会一直运行下去。当求`fib(0)`时，就去求`fib(-1)`和`fib(-2)`。当运行到负无穷或者Python中最小的负整数时，会发生什么。会告诉我们越界了吗。试试看。
+
+```python
+$ python fi.py
+Traceback (most recent call last):
+  File "fi.py", line 4, in <module>
+    print(fib(10))
+  File "fi.py", line 2, in fib
+    fib(n-1) + fib(n-2)
+  File "fi.py", line 2, in fib
+    fib(n-1) + fib(n-2)
+  File "fi.py", line 2, in fib
+    fib(n-1) + fib(n-2)
+  [Previous line repeated 996 more times]
+RecursionError: maximum recursion depth exceeded
+```
+
+这是说`递归错误：超过了最大的递归深度`。这不禁让人好奇，这最大递归深度到底是多少。怎么办。把函数里的`n`打印出来。
+
+```python
+def fib(n):
+  print(n)
+  fib(n-1) + fib(n-2)
+  
+print(fib(10))
+```
+
+```shell
+...
+-982
+-983
+-984
+-985
+Traceback (most recent call last):
+  ...
+  File "fi.py", line 3, in fib
+    fib(n-1) + fib(n-2)
+  [Previous line repeated 992 more times]
+  File "fi.py", line 2, in fib
+    print(n)
+RecursionError: maximum recursion depth exceeded while calling a Python object
+```
+
+我把输出简写了一下。这很有意思。可以注意到 `996 more times`和`992 more tims`。第一个打印的应该是`10`。那么10到-985，这大概是打印了996次数。即是`10-(-985)+1`次数。可能最大递归次数真的是`996`次。也许是因为函数里的逻辑比较少，所以能递归那么多次。
+
+ 
+
+这也意味着，尽管写出了正确的斐波那契数列程序，我们这递归版本的程序也只能算到`1000`左右。但何妨呢，我们只是来学习的，又不是来干别的。
+
+
+
+接下来，很自然要加上`if`判断。
+
+```python
+def fib(n):
+  if n == 1:
+     0
+  else:
+    if n == 2:
+       1
+    else: 
+      fib(n-1) + fib(n-2)
+  
+print(fib(10))
+```
+
+写成了这样。这样似乎有点不够优雅。`n == 1` 或 `n==2`时应该是一种情况。而我们这里显得 `n==2` 和`fib(n-1) + fib(n-2)` 是一种情况一样。也意味着假如当 `n`为2以上时，总是要判断两下，才能到达最后的递归语句。能不能先处理递归语句。
+
+```python
+def fib(n):
+  if n > 2:
+     fib(n-1) + fib(n-2)
+  else:
+    if n == 2:
+       1
+    else:
+       0
+      
+  
+print(fib(10))
+```
+
+先写成这样吧。运行看看。
+
+
+
+出错了。
+
+```shell
+$ python fi.py
+Traceback (most recent call last):
+  ...
+  File "fi.py", line 3, in fib
+    fib(n-1) + fib(n-2)
+  [Previous line repeated 5 more times]
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'NoneType'
+```
+
+这是什么意思？意思是说，无法将两个类型是 NoneType 的东西加起来。哪里用到了加法。可见是` fib(n-1) + fib(n-2)`出错了。一直运行下去，我们希望的是 `n == 3`时，是希望 1 和 0 加起来。
+
+
+
+这是为什么。也许是因为`1`和`0`这两个值并没有返回给函数。难道前面要加一个`return`吗。
+
+```python
+def fib(n):
+  if n > 2:
+     return fib(n-1) + fib(n-2)
+  else:
+    if n == 2:
+       return 1
+    else:
+       return 0
+      
+  
+print(fib(10))
+```
+
+```shell
+$ python fi.py
+34
+```
+
+似乎对了。没法一下子判断 `fib(10)`是不是34。让我们试试求`fib(3)`和`fib(4)`，分别得到了`1`和`2`。可见是对了。
+
+
+
+来试试看，求n为1000时的值。果然出错了。
+
+```powershell
+$ python fi.py
+Traceback (most recent call last):
+  ...
+  File "fi.py", line 3, in fib
+    return fib(n-1) + fib(n-2)
+  [Previous line repeated 995 more times]
+  File "fi.py", line 2, in fib
+    if n > 2:
+RecursionError: maximum recursion depth exceeded in comparison
+```
+
+来把程序改得更优雅一点。
+
+```python
+def f(n):
+  if n > 2:
+     return f(n-1) + f(n-2)
+  else:
+    if n == 2:
+       return 1
+    else:
+       return 0
+      
+  
+print(f(10))
+```
+
+简单查阅之后，发现 `else if`这种形式可以简写为 `elif`。n 的含义我们想是说平时说的第n位。也就是写成一列数列，第1个是0，第2个是1。也许我们要打印数列，则这个第几位没那么重要。这样来改写：
+
+
 
