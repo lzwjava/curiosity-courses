@@ -12,8 +12,6 @@ Java 诞生于1995年，有着25年的历史。Java 的官网是 https://www.jav
 
 试试在终端运行`javac`。
 
-
-
 ```shell
 $ javac
 Usage: javac <options> <source files>
@@ -51,7 +49,82 @@ where possible options include:
   @<filename>                Read options and filenames from file
 ```
 
-果然已经跑起来了。如果出错了，提示没有命令。那可能要更改终端运行的环境变量。
+这一串的英文信息可以忽略。然而说明已经跑起来了。如果出错了，提示没有命令。那可能要更改终端运行的环境变量。
 
 
 
+来创建java文件，尝试写点什么，编译一下。
+
+```java
+2+3
+```
+
+```java
+$ javac hello.java
+hello.java:1: error: class, interface, or enum expected
+2+3
+^
+hello.java:1: error: class, interface, or enum expected
+2+3
+ ^
+hello.java:1: error: class, interface, or enum expected
+2+3
+  ^
+```
+
+结果很有意思。报了三个错，分别指向三个字符。告知说，编译程序希望这是`class`、`interface`或`enum`，中文上通常叫类、接口和枚举。
+
+```java
+class Happy{ 
+  public static void main(String args[]){  
+   System.out.println("Hello Java");  
+  }  
+}
+```
+
+网上找了一段代码示例。这看起来很复杂，出现很多新东西。这出现在「解谜计算机科学」里没有出现过的概念，`class`。这其实相当于我们说的温度控制器。里面则含有温度控制器的操作函数。也可以暂时理解为`模块`。它比`文件`小一些，又比`函数`大一些。接下来就是一个函数。`System.out`大概是一个依赖库。`String args[]`声明了一个字符串数组，名字叫`args`。
+
+
+
+来，编译一下。
+
+```shell
+$javac hello.java
+
+$ ls
+Happy.class	hello.java	
+```
+
+编译后，发现啥也没有显示。列举文件之后，发现多了一个文件，叫`Happy.class`。
+
+
+
+接下来，怎么办呢。该怎么运行呢。搜索资料简单看了下后，发现只要用`java`运行一下就行。
+
+```shell
+$ java Happy
+Hello Java
+```
+
+这说明成功了。我们的 Java 程序跑起来了。
+
+
+
+再来玩一下。
+
+```java
+class Happy{ 
+  public static void main(String args[]){  
+   System.out.println(2+3);  
+  }  
+}
+```
+
+```shell
+$ javac hello.java
+
+$ java Happy
+5
+```
+
+嗯，很顺利。
