@@ -52,3 +52,6 @@ where possible options include:
 ```
 
 果然已经跑起来了。如果出错了，提示没有命令。那可能要更改终端运行的环境变量。
+
+
+

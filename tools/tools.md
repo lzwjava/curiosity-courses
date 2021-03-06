@@ -34,8 +34,6 @@ $ pwd
 /Users/lzw/ideas/curious-courses/program/run/rust
 ```
 
-
-
 ```
 mkdir program
 ```
@@ -43,6 +41,23 @@ mkdir program
 
 
 猜上面两个语句是什么意思。一个是打印当前目录，一个是创建目录。pwd是 `print working directory` 的意思。mkdir中的mk是make的简写。
+
+
+
+如何打开目录呢。来进入下载目录。
+
+```shell
+cd ~/Downloads
+```
+
+注意`~`是表示用户根目录的意思。运行一下`pwd`。
+
+```shell
+$ pwd
+/Users/lzw/Downloads
+```
+
+可能因为经常用到用户根目录，于是`~`就用来指代这么一个用户根目录。
 
 
 
@@ -95,6 +110,109 @@ brew install rust
 
 
 这些脚本只需要复制粘贴到终端，即可执行。为什么有时要用Homebrew来安装。因为官网的脚本通常只通过了安装功能，而没有卸载功能。升级可能也没有Homebrew那么方便。Homebrew也能把这类程序都统一管理起来。通常折腾计算机，需要安装很多的程序，各种各样的程序，时常也用到多种编程语言。如果每种语言都安装到不同的地方，那我们很难记得它们在哪里，也就不方便管理它们。然而刚开始接触编程的话，用官网的脚本是很方便的。
+
+
+
+## 环境变量
+
+
+
+像上面在终端运行命令的时候，每次输入一些单词，系统怎么知道怎么去执行呢。来随便输入一点什么。
+
+```shell
+$ abc
+-bash: abc: command not found
+```
+
+这意思是说`abc`没有找到。就是说当输入一些单词敲回车的时候，终端就会在一些目录去找有没有叫这个单词的程序。如果都没有找到，那就提示说`command not found`。如果找到，就执行它。
+
+
+
+那会在哪些目录去找呢。细心的读者可以发现，上面用`which` 和`type`的时候就已经告诉了一些答案。
+
+```shell
+$ which ls
+/bin/ls
+```
+
+接着继续发现看看。
+
+```shell
+$ type curl
+curl is /usr/bin/curl
+```
+
+```shell
+$ type mkdir
+mkdir is /bin/mkdir
+```
+
+```shell
+$ type pwd
+pwd is a shell builtin
+```
+
+```shell
+$ type brew
+brew is /usr/local/bin/brew
+```
+
+很有意思吧。`pwd`竟然不是跟`ls`在同一个目录，而是命令行自带的。
+
+
+
+可见终端会在`/bin`、`/usr/bin`、`/usr/local/bin`目录找。这当然只是一些情况。我们也只是探索了几个命令。
+
+
+
+那能不能告诉终端还可以去别的目录找。比如我们刚下载一个编译器程序叫 happy，它用来对 Happy 语言进行编程。我们希望在终端就能调用这个happy程序。
+
+
+
+假如这个程序在用户目录的`compiler`目录下，即`~/compiler`中。那该如何做呢。该如何告诉终端，每次在我输入命令名字的时候，也去下载目录里找找有没有叫这个名字的命令。
+
+
+
+终端用一个名字来保存这样的信息，叫`PATH`。`PATH`就是环境变量。终端在默认的一些目录找完后，就在`PATH`所表示的目录里找。
+
+
+
+当前的`PATH`变量值是多少呢。
+
+
+
+```shell
+$ echo $PATH
+/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin
+```
+
+我的终端上显示一大堆目录。这里我挑选了一部分目录写在上边。可见用`:`来分隔一些目录。
+
+
+
+接下来这么改，把`~/compiler加上去。
+
+```shell
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:~/compiler
+```
+
+那么在终端输入`happpy`，终端就能找到相应的程序来运行来。
+
+
+
+然而关闭终端后，重新打开，去打印环境变量时，会发现`PATH`还是老样子。敲入`happy`去执行后，告诉我们`command not found`。
+
+
+
+如何每次启动终端，环境变量`PATH`都是所希望的呢。在 macOS 上可以创建或更改 `~/.bash_profile`文件。把PATH更改语句写在上面：
+
+
+
+`~/.bash_profile`：
+
+```shell
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:~/compiler
+```
 
 
 
