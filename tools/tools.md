@@ -190,7 +190,7 @@ $ echo $PATH
 
 
 
-接下来这么改，把`~/compiler加上去。
+接下来这么改，把`~/compiler`加上去。
 
 ```shell
 PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:~/compiler
@@ -213,6 +213,10 @@ PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:~/com
 ```shell
 PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/opt/local/bin:/opt/local/sbin:~/compiler
 ```
+
+
+
+接下来，每次都能在终端上运行`happy`了。
 
 
 
