@@ -152,7 +152,7 @@ src/main.rs is where we’ll write our application code.
 
 
 ```shell
-cargo new hello-rust
+$ cargo new hello-rust
 
 Created binary (application) `hello-rust` package
 ```
@@ -178,7 +178,7 @@ fn main() {
 
 
 ```shell
-cargo build
+$ cargo build
 
 error: could not find `Cargo.toml` in `/Users/lzw/ideas/curious-courses/program/run/rust` or any parent directory
 ```
@@ -194,7 +194,7 @@ error: could not find `Cargo.toml` in `/Users/lzw/ideas/curious-courses/program/
 
 
 ```shell
-cargo run
+$ cargo run
    
    Compiling hello-rust v0.1.0 (/Users/lzw/ideas/curious-courses/program/run/rust/hello-rust)
     Finished dev [unoptimized + debuginfo] target(s) in 4.43s
@@ -264,8 +264,8 @@ fn main() {
 
 对了，build会怎么样。
 
-```
-cargo build
+```shell
+$ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 0.00s
 ```
 
