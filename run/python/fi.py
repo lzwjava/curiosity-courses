@@ -1,5 +1,5 @@
 v = []
-for x in range(100):
+for x in range(1000):
    v.append(-1)
 
 def f(n):
