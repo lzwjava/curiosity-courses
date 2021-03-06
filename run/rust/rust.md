@@ -224,7 +224,7 @@ fn main() {
 
 
 
-```
+```shell
    Compiling hello-rust v0.1.0 (/Users/lzw/ideas/curious-courses/program/run/rust/hello-rust)
 error: format argument must be a string literal
  --> src/main.rs:2:14
