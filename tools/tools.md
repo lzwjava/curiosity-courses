@@ -17,7 +17,7 @@
 来在终端运行一些命令。我用的是Mac。Windows 上的终端和macOS的终端是有差异的。
 
 ```shell
-ls  
+$ ls  
 
 hello-rust	rust.md
 ```
@@ -29,7 +29,7 @@ ls 表示列举当前目录下的文件。
 
 
 ```shell
-pwd
+$ pwd
  
 /Users/lzw/ideas/curious-courses/program/run/rust
 ```
