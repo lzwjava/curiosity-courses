@@ -14,7 +14,7 @@
 
 * [解谜计算机科学](./calculate/calculate.md) 
 * [作业1](./calculate/exercise.md)
-* [搭建编程环境](./tools/tools.md)
+* [熟悉编程环境](./tools/tools.md)
 * [其它](./outline.md)
 * [试用Rust编程](./run/rust/rust.md)
 * [试用Python编程](./run/python/python.md)
