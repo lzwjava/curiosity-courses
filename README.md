@@ -18,7 +18,7 @@
 * [其它](./outline.md)
 * [试用Rust编程](./run/rust/rust.md)
 * [试用Python编程](./run/python/python.md)
-* [试用C编程](./c/c.md)
+* [试用C编程](./run/c/c.md)
 
 
 
