@@ -130,7 +130,7 @@ See 'cargo help <command>' for more information on a specific command.
 
 继续看官网文档：
 
-```
+```c
 Let’s write a small application with our new Rust development environment. To start, we’ll use Cargo to make a new project for us. In your terminal of choice run:
 
 cargo new hello-rust
