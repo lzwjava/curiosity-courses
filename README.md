@@ -19,6 +19,7 @@
 * [试用Rust编程](./run/rust/rust.md)
 * [试用Python编程](./run/python/python.md)
 * [试用C编程](./run/c/c.md)
+* [试用Java编程](./run/java/java.md)
 
 
 
