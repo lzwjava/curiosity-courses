@@ -815,11 +815,234 @@ abcdefghijklmnopqrstuvwxyz
 
 
 
+## 面向对象
+
+
+
+如何把我们的斐波那契数列功能做成 `Web`应用呢。也就是说希望用网页访问的方式来访问它。平时我们用电脑或手机访问网页时，数据在我们电脑手机和网页背后的服务器发生了通信交互。通常这个通信的协议叫 `HTTP协议`。 `HTTP协议`就是一套数据通信规范。就如上面输入参数n的情况，`n:`，接着我们输入数字，就打印了斐波那契数列前`n`位一样。这可以说就是我们定义的`参数输入协议`，可以给它起名叫`FIB_N`协议。
+
+
+
+接着我们想想网页它有什么特点。服务器没有出错的话，它随时都在。谁都可以访问。也就是程序一直在运行 。我们的斐波那契数列程序如何一直可以运行呢。如何一直可以输入`n`呢。
+
+```python
+from fib import f
+
+while True:
+  n = input("n:")
+  n = int(n)
+  print(f(n))
+```
+
+```shell
+$ python fib_cls.py
+n:5
+5
+n:9
+34
+n:
+```
+
+看，加个`while`循环就行了。`while True`则表明会一直运行循环里的代码块。
+
+
+
+嗯，我们做到了。可以说，这意味着在终端咱们构建了一个服务器。这个服务器用`FIB_N`协议来进行通信。
+
+
+
+通常`服务器`有很多的代码要处理，有很多的函数，很多的变量。会混淆怎么办。都分成不同的模块，放在不同的文件是可以。然而这样意味着代码很分散。如何把一类的函数放在一起呢。这时候出现了`面向对象`这种编程方法。同时引入`class`类的概念。来改写一下我们的代码。
+
+```python
+from fib import f
+
+class Server:
+  def run():
+    while True:
+      n = input("n:")
+      n = int(n)
+      print(f(n))
+```
+
+这意味着声明了一个类，名字叫`Server`。它有run方法。来运行一下。
+
+```python
+from fib import f
+
+class Server:
+  def run():
+    while True:
+      n = input("n:")
+      n = int(n)
+      print(f(n))
+
+server = Server()
+server.run()
+```
+
+这就是说用这个类，创建一个实例。`class`下的代码块仅仅表明定义了一个类，没有执行什么。这里声明服务器是这样的。接着创建一个服务器对象。接着调用这个对象的`run`方法。
+
+
+
+```shell
+$ python fib_cls.py
+Traceback (most recent call last):
+  File "fib_cls.py", line 11, in <module>
+    server.run()
+TypeError: run() takes 0 positional arguments but 1 was given
+```
+
+然而出现了错误。简单查阅了之后，得知。`run`这里是函数，而非实例的方法。意味着应该直接运行这个函数。改一下。
+
+```python
+from fib import f
+
+class Server:
+  def run():
+    while True:
+      n = input("n:")
+      n = int(n)
+      print(f(n))
+
+Server.run()
+```
+
+```shell
+$ python fib_cls.py
+n:5
+5
+n:
+```
+
+很好。然而如果写成对象的方法，改如何进行呢。应该写成函数还是实例的方法呢。这应该写成实例的方法。因为假如有两个服务器，我们希望是各自处理各自的。
+
+```python
+from fib import f
+
+class Server:
+  def run(self):
+    while True:
+      n = input("n:")
+      n = int(n)
+      print(f(n))
+
+server = Server()
+server.run()
+```
+
+```python
+$ python fib_cls.py
+n:7
+13
+```
+
+很好，运行起来了。注意到此时`run`函数定义处得加上`self`参数，`self`即表明是对象自身。
+
+
+
+接着思考如何做一个通用的终端`服务器`。意思是不仅可以处理斐波那契数列的问题，也能处理`1+2+..+n`的求和问题等。来定义一个`处理器`。它可以处理终端的输入。
+
+```python
+class Handler:
+  def handle(self, request):
+    pass
+```
+
+这里`pass`就是占一个位置。它什么也不做。类似上面的`return 0`。因为Python中，缩进很重要。如果什么也不写，可能编译器就没法知道哪里是结尾。
+
+
+
+那这个处理器是指`求斐波那契数列第n位`的处理器还是说`1到n求和`的处理器呢。我们如何提供一个`终端服务器模块`呢。也就是其他人可以用我们的`Server`和`Handler`。那么其他人也必须遵守一定的规则。这个`Handler`是有规则的。它有一个`handle`函数，是实例方法，需要传递一个参数给它。
+
+
+
+可见所谓遵守规则，就是要和我们的`Handler`一样。那就是说我们只接受像`Handler`这样的东西来使用我们的`Server`。于是我们引入一个类`BaseHandler`来表示这样的规则。
+
+```python
+class BaseHandler:
+  def handle(self, request):
+    pass
+
+class FibHandler(BaseHandler):
+  def handle(self, request):
+    pass
+```
+
+注意到声明`BaseHandler`的同时，我们把之前的`Handler`改了名字。同时注意到 `FibHandler`继承了`BaseHandler`，表示在这里`class FibHandler(BaseHandler):`。继承的意思是说，我有了它的方法和变量等，我还可以定义额外的一些方法，但需要遵守一些规则。
+
+
+
+再改一下。
+
+```python
+class BaseHandler:
+  def handle(self, request:str):
+    pass
+```
+
+这表明`request`必须是个字符串。
+
+
+
+接下来我们的`Server`代码如何改动。
+
+```python
+class Server:
+  def run(self):
+    while True:
+      n = input("n:")
+      n = int(n)
+      print(f(n))
+```
+
+这个终端服务器应该能一直运行，来处理请求。我们将像`FibHandler`这样的请求处理器告知这个终端服务器，接着它就能用这个请求处理器来处理请求。
+
+```python
+from fib import f
+
+class BaseHandler:
+  def handle(self, request:str):
+    pass
+
+class FibHandler(BaseHandler):
+  def handle(self, request:str):
+    n = int(request)
+    print('f(n)=', f(n))
+    pass
+
+class Server:
+  def __init__(self, handlerClass):
+    self.handlerClass = handlerClass
+
+  def run(self):    
+    while True:
+      request = input()
+      self.handlerClass().handle(request)
+
+      
+server = Server(FibHandler)
+server.run()
+```
+
+`__init__`这里意思是说，初始化的时候，得告诉`Server`请求处理器的名字。注意我们传递的是名字。因为每一个请求，我们都要生成一个请求处理器对象，来处理它。注意到下面的`Server(FibHandler)`，这里我们在生成`Server`的对象的时候，也传入了`请求处理器`的名字。同时也稍稍改变了输出方式。`print('f(n)=', f(n))`增强了前置说明。可注意到了也去掉了`n:`。这些是一些小细节，来方便阅读。
+
+```python
+$ python fib_cls.py
+3
+f(n)= 2
+5
+f(n)= 5
+```
+
+成功了。
+
+
+
 ## Web 开发
 
 
 
-如何把我们的斐波那契数列功能做成 `Web`应用呢。也就是说希望用网页访问的方式来访问它。我们把上面的代码改成一个 Web 服务。
+我们把上面的代码改成一个 Web 服务。
 
 
 
