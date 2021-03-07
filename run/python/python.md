@@ -1034,7 +1034,44 @@ f(n)= 2
 f(n)= 5
 ```
 
-成功了。
+成功了。接下来，我们把这个`终端服务器`共享出来给所有人用。
+
+
+
+`server.py`：
+
+```python
+class BaseHandler:
+  def handle(self, request:str):
+    pass
+
+class Server:
+  def __init__(self, handlerClass):
+    self.handlerClass = handlerClass
+
+  def run(self):    
+    while True:
+      request = input()
+      self.handlerClass().handle(request)
+```
+
+`fib_handle.py`：
+
+```python
+from fib import f
+from server import BaseHandler, Server
+
+class FibHandler(BaseHandler):
+  def handle(self, request:str):
+    n = int(request)
+    print('f(n)=', f(n))
+    pass
+
+server = Server(FibHandler)
+server.run()  
+```
+
+嗯，运行没问题。
 
 
 
@@ -1042,7 +1079,7 @@ f(n)= 5
 
 
 
-我们把上面的代码改成一个 Web 服务。
+我们把上面的`Server`换成`HTTP协议`的`Server`就行了。先来看看Python中的`HTTP服务器`是怎么样的。
 
 
 
@@ -1078,15 +1115,11 @@ Serving HTTP on :: port 8000 (http://[::]:8000/) ...
 ::1 - - [07/Mar/2021 15:30:38] "GET / HTTP/1.1" 200 -
 ```
 
-这是网页访问日志。其中`GET`表示网页服务的一种数据访问操作。`HTTP/1.1`表示使用了 `HTTP`的`1.1`版本的协议。`HTTP`协议就是一套数据通信规范。就如上面输入参数n的情况，`n:`，接着我们输入数字，就打印了斐波那契数列前`n`位一样。这可以说就是我们定义的`参数输入协议`，可以给它起名叫`FIB_N`协议。
+这是网页访问日志。其中`GET`表示网页服务的一种数据访问操作。`HTTP/1.1`表示使用了 `HTTP`的`1.1`版本的协议。
 
 
 
-平时我们用电脑或手机访问网页时，数据在我们电脑手机和网页背后的服务器发生了通信交互。很多时候，用的协议就是`HTTP`。
-
-
-
-如何用它来打造我们的斐波那契数列服务。先写一个最简单的Web服务器
+如何用它来打造我们的斐波那契数列服务。先网上找找样例代码，稍微改改，写一个最简单的Web服务器：
 
 ```python
 from http.server import SimpleHTTPRequestHandler, HTTPServer
@@ -1103,16 +1136,56 @@ server = HTTPServer(("127.0.0.1", 8000), Handler)
 server.serve_forever()
 ```
 
-出现了很多的新东西。
+这些是不是很眼熟。几乎跟上面我们使用`Server`是一样的。注意到`SimpleHTTPRequestHandler`不是基础类，还有一个叫`BaseHTTPRequestHandler`。``SimpleHTTPRequestHandler``相对于多处理了一些内容。这些加上斐波那契数列处理功能是容易的。
 
 
 
-第一行，我们从`http.server`模块中，引入了两个类。`SimpleHTTPRequestHandler`是叫`简单HTTP请求处理器`。`HTTPServer`叫`HTTP服务器`。这是什么意思。还记得上面的例子吗。
+这里的`127.0.0.1`表示本机的地址，`8000`表示本机的端口。端口怎么理解呢。就好像家里的一个窗户一样，是家里跟外界沟通的一个端口。`bytes`表示把字符串变成字节。`utf-8`是一种字符串编码方式。`send_response`、`send_header`和`end_headers`都是在输出一些内容，来输出`HTTP`协议所规定的内容，好能被浏览器所理解。这样我们在网页里就看到了`hi`。
+
+<img src="./img/hi.png" alt="hi" style="zoom:50%;" />
+
+
+
+接着试试再从请求从得到参数。
 
 ```python
-n = input("n:")
-n = int(n)
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+from fib import f
+from urllib.parse import urlparse,parse_qs
+
+class Handler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+      self.send_response(200)
+      self.send_header('Content-type', 'text')      
+      self.end_headers()
+      parsed = urlparse(self.path)
+      qs = parse_qs(parsed.query)      
+      result = ""
+      if len(qs) > 0:
+        ns = qs[0]
+        if len(ns) > 0:          
+          n = int(ns)
+          result = str(f(n))
+      self.wfile.write(bytes(result, "utf-8"))
+
+server = HTTPServer(("127.0.0.1", 8000), Handler)
+
+server.serve_forever()
 ```
 
-这两行代码，我们可以用类封装起来。
+
+
+<img src="/Users/lzw/curious-courses/run/python/img/n10.png" alt="n10" style="zoom:50%;" />
+
+
+
+有点复杂吧。这里就是在解析一些参数。
+
+```shell
+self.path=/?n=3
+parsed=ParseResult(scheme='', netloc='', path='/', params='', query='n=3', fragment='')
+qs={'n': ['3']}
+ns=['3']
+n=3
+```
 
