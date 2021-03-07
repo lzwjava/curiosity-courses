@@ -1,6 +1,5 @@
-import fib
+from fib import f
 
 n = input("n:")
 n = int(n)
-print(fib.f(n))
-
+print(f(n))

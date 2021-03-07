@@ -762,7 +762,25 @@ n = int(n)
 print(fib.f(n))
 ```
 
-`fib`这样的在Python也叫做模块。既然如此，有没有一些系统的模块，可以很方便地引入呢。
+`fib`这样的在Python也叫做模块。刚好这个文件名我起的比较简洁一些，叫`fib`。如果是`fibonacci`，那得要写成：
+
+```python
+print(fibonacci.f(n))
+```
+
+这样就挺冗长的。怎么办呢。可以这样：
+
+```python
+from fib import f
+
+n = input("n:")
+n = int(n)
+print(f(n))
+```
+
+
+
+既然这里用到了我们自己写的模块，有没有一些系统的模块，可以很方便地引入呢。
 
 
 
@@ -781,4 +799,97 @@ Traceback (most recent call last):
     print(string.ascii_lowercase('abc'))
 TypeError: 'str' object is not callable
 ```
+
+稍稍读下文档，才知道。`ascii_lowercase` 其实不是一个函数，而是一个字符串。
+
+```python
+import string
+
+print(string.ascii_lowercase)
+```
+
+```shell
+$ python m.py
+abcdefghijklmnopqrstuvwxyz
+```
+
+
+
+## Web 开发
+
+
+
+如何把我们的斐波那契数列功能做成 `Web`应用呢。也就是说希望用网页访问的方式来访问它。我们把上面的代码改成一个 Web 服务。
+
+
+
+Python 的标准库中提供了一个网页服务器。
+
+```
+python -m http.server
+```
+
+在终端中运行它。
+
+```shell
+$ python -m http.server
+Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+```
+
+在浏览器中打开便可以看到效果。
+
+<img src="./img/webserver.png" alt="webserver" style="zoom:50%;" />
+
+这把当前目录列举出来了。接着当浏览这个网页时，再回去看终端。这会，很有意思。
+
+```shell
+$ python -m http.server
+Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+::1 - - [07/Mar/2021 15:30:35] "GET / HTTP/1.1" 200 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:38] "GET / HTTP/1.1" 200 -
+```
+
+这是网页访问日志。其中`GET`表示网页服务的一种数据访问操作。`HTTP/1.1`表示使用了 `HTTP`的`1.1`版本的协议。`HTTP`协议就是一套数据通信规范。就如上面输入参数n的情况，`n:`，接着我们输入数字，就打印了斐波那契数列前`n`位一样。这可以说就是我们定义的`参数输入协议`，可以给它起名叫`FIB_N`协议。
+
+
+
+平时我们用电脑或手机访问网页时，数据在我们电脑手机和网页背后的服务器发生了通信交互。很多时候，用的协议就是`HTTP`。
+
+
+
+如何用它来打造我们的斐波那契数列服务。先写一个最简单的Web服务器
+
+```python
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+class Handler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+      self.send_response(200)
+      self.send_header('Content-type', 'text')
+      self.end_headers()
+      self.wfile.write(bytes("hi", "utf-8"))
+
+server = HTTPServer(("127.0.0.1", 8000), Handler)
+
+server.serve_forever()
+```
+
+出现了很多的新东西。
+
+
+
+第一行，我们从`http.server`模块中，引入了两个类。`SimpleHTTPRequestHandler`是叫`简单HTTP请求处理器`。`HTTPServer`叫`HTTP服务器`。这是什么意思。还记得上面的例子吗。
+
+```python
+n = input("n:")
+n = int(n)
+```
+
+这两行代码，我们可以用类封装起来。
 
