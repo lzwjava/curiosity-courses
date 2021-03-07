@@ -170,7 +170,7 @@ hello
 
 
 
-## 递归
+## 斐波那契数列
 
 
 
@@ -690,6 +690,83 @@ IndexError: list index out of range
 ```
 
 10000呢。竟然也可以。Python 的数值运算太厉害了。
+
+
+
+## 模块
+
+
+
+这是打印斐波那契数列的前n位。改了一下程序，很容易只打印数列的第n个数。
+
+
+
+将
+
+```python
+n = input("n:")
+n = int(n)
+i = 0
+while i < n:   
+  print(f(i), end=" ")
+  i = i + 1
+
+print()
+```
+
+改成
+
+```python
+n = input("n:")
+n = int(n)
+print(f(n))
+```
+
+即可。
+
+
+
+注意到我们写了很有用的关于斐波那契数列的代码，可以被灵活使用。如何把这段代码共享给任何人呢。其他人复制粘贴可能不是那么方便。另外他们的代码里也可能有叫`f`的函数和叫`v`的列表。Python中，可以用文件来办到。
+
+
+
+创建一个文件，叫`fib.py`。来把这段有用的代码复制粘贴到这里。接着创建一个文件，叫`fib_n.py`。这里来`import`刚刚那个文件。接着用`fib.f`来调用`fib.py`里的`f`函数。
+
+fib.py：
+
+```python
+v = []
+for x in range(1000):
+   v.append(-1)
+
+def f(n):
+   if v[n] != -1:
+      return v[n]
+   else:
+      a = 0
+      if n < 2:
+         a = n
+      else:
+         a = f(n-1) + f(n-2)
+      v[n] = a
+      return v[n]
+```
+
+fib_n.py：
+
+```python
+import fib
+
+n = input("n:")
+n = int(n)
+print(fib.f(n))
+```
+
+`fib`这样的在Python也叫做模块。既然如此，有没有一些系统的模块，可以很方便地引入呢。
+
+
+
+在官网的标准库文档里挑一个，`string`模块吧。它有个函数 `ascii_lowercase` 试试用用它。
 
 
 
