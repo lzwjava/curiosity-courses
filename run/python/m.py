@@ -1,3 +1,3 @@
 import string
 
-print(string.ascii_lowercase('abc'))
+print(string.ascii_lowercase())

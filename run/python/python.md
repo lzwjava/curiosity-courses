@@ -768,5 +768,17 @@ print(fib.f(n))
 
 在官网的标准库文档里挑一个，`string`模块吧。它有个函数 `ascii_lowercase` 试试用用它。
 
+```python
+import string
 
+print(string.ascii_lowercase('abc'))
+```
+
+```shell
+$ python m.py
+Traceback (most recent call last):
+  File "m.py", line 3, in <module>
+    print(string.ascii_lowercase('abc'))
+TypeError: 'str' object is not callable
+```
 
