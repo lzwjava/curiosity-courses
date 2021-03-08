@@ -536,7 +536,9 @@ f(2)
 
 
 
-<img src="/Users/lzw/ideas/curious-courses/program/img/branch.png" alt="branch" style="zoom:50%;" />
+<img src="./img/branch.png" alt="branch" style="zoom:50%;" />
+
+
 
 这里用`t`来表示是否下雨，0表示不下雨，1表示下雨。`t==1`表示来判断是否下雨。中间的判断结构叫做分支（branching），通常用菱形表示。
 
