@@ -1175,7 +1175,7 @@ server.serve_forever()
 
 
 
-<img src="/Users/lzw/curious-courses/run/python/img/n10.png" alt="n10" style="zoom:50%;" />
+<img src="./img/n10.png" alt="n10" style="zoom:50%;" />
 
 
 
