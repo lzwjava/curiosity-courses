@@ -20,6 +20,8 @@
 * [试用 Python 编程](./run/python/python.md)
 * [试用 C 编程](./run/c/c.md)
 * [试用 Java 编程](./run/java/java.md)
+* [Python编程进阶](./run/python/python.md)
+* [如何上Google](./google/google.md)
 
 ## 练习需知
 
