@@ -156,3 +156,137 @@ def f(n):
 ...
 ```
 
+来试试吧。
+
+```python
+f = open("demofile2.txt", "a")
+f.write("Now the file has more content!")
+f.close()
+
+#open and read the file after the appending:
+f = open("demofile2.txt", "r")
+print(f.read())
+```
+
+`open`的第二个参数可以是`a`，表示会加在文件末尾；或者是`w`，表示会覆盖掉文件。
+
+```python
+file = open('fib_v', 'a')
+file.write('hi')
+file.close()
+```
+
+运行一下，果然有文件`fib_v`。
+
+`fib_v`:
+
+```shell
+hi
+```
+
+当我们再运行一次的时候，变成了这样。
+
+```shell
+hihi
+```
+
+如何换行呢。
+
+```python
+file = open('fib_v', 'a')
+file.write('hi\n')
+file.close()
+```
+
+这会打印一次，出现了`hihihi`，没看见换行呢。然而再打印一次，换行了。可见第一次已经打印了换行符，只是在末尾，看不见。
+
+如何读取呢。
+
+```python
+file = open('fib_v', 'r')
+print(file.read())
+```
+
+```shell
+$ python fib.py
+hihihi
+hi
+```
+
+接下来，改改我们的斐波那契程序。
+
+```python 
+v = []
+for x in range(1000000):
+   v.append(-1)
+
+def read():
+   file = open('fib_v', 'r')
+   s = file.read()
+   if len(s) > 0:
+      lines = s.split('\n')
+      if (len(lines) > 0):
+        for i in range(len(lines)):
+           v[i] = int(lines[i])   
+
+def save():
+   file = open('fib_v', 'w')
+   s = ''
+   start = True
+   for vv in v:
+      if vv == -1:
+         break      
+      if start == False:
+         s += '\n'
+      start = False   
+      s += str(vv)
+   file.write(s)
+   file.close()
+
+def fcache(n):
+   x = fplus(n)
+   save()
+   return x
+
+def fplus(n):
+   if n > 800:         
+      fplus(n-800)
+      return f(n)
+   else:
+      return f(n)
+
+def f(n):
+   if v[n] != -1:
+      return v[n]
+   else:
+      a = 0
+      if n < 2:
+         a = n
+      else:
+         a = f(n-1) + f(n-2)
+      v[n] = a
+      return v[n]
+
+read()
+fcache(10)
+save()
+```
+
+终于我们写好程序了。程序运行后，`fib_v`文件是这样的。
+
+`fib_v`:
+
+```shell
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+55
+```
+
