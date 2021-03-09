@@ -21,13 +21,13 @@
 
 我们这里用到的是一个叫召唤师的平台。网址是`https://zhshi.gitlab.io`。
 
-<img src="/Users/lzw/curious-courses/google/img/zhs.png" alt="zhs" />
+<img src="./img/zhs.png" alt="zhs" />
 
 然而可能上不去。因为它被长城防火墙阻拦了。
 
 
 
-![zhs_user](/Users/lzw/curious-courses/google/img/zhs_user.png)
+![zhs_user](./img/zhs_user.png)
 
 登录上去是这样的。
 
@@ -49,9 +49,9 @@
 
 
 
-![clash_win](/Users/lzw/curious-courses/google/img/clash_win.png)
+![clash_win](./img/clash_win.png)
 
-![win_version](/Users/lzw/curious-courses/google/img/win_version.png)
+![win_version](./img/win_version.png)
 
 
 
@@ -67,7 +67,7 @@
 
 
 
-![clash_win_exe](/Users/lzw/curious-courses/google/img/clash_win_exe.png)
+![clash_win_exe](./img/clash_win_exe.png)
 
 
 
@@ -75,13 +75,13 @@
 
 我先给了它我的召唤师配置地址。也就是说，这个配置地址会下载一个文件，这里文件包含着很多翻墙服务器地址。在`Profiles`下面，把地址填上，然后点击`Download`下载。
 
-![zhs_url](/Users/lzw/curious-courses/google/img/zhs_url.png)
+![zhs_url](./img/zhs_url.png)
 
 看下载好了。注意看上面第二个配置。注意到配置前面有个绿色的选中标志。表明我们已经在用这个配置了。
 
 
 
-![zhs_proxy](/Users/lzw/curious-courses/google/img/zhs_proxy.png)
+![zhs_proxy](./img/zhs_proxy.png)
 
 
 
@@ -93,19 +93,19 @@
 
 
 
-![zhs_node](/Users/lzw/curious-courses/google/img/zhs_node.png)
+![zhs_node](./img/zhs_node.png)
 
 
 
 选择了 `US玫瑰`这个节点。
 
-![clash_system](/Users/lzw/curious-courses/google/img/clash_system.png)
+![clash_system](./img/clash_system.png)
 
 接着，把`System Proxy`这个设置，切换它的状态，来开启它。就是说将`Clash`软件设成系统的代理层。那么系统的流量将先到`Clash`软件，然后再去访问外网。
 
 
 
-<img src="/Users/lzw/curious-courses/google/img/google.png" alt="google" style="zoom:40%;" />
+<img src="./img/google.png" alt="google" style="zoom:40%;" />
 
 小王打开了谷歌。接下来试试了 TikTok、Youtube和Twitter。
 
@@ -115,13 +115,13 @@
 
 
 
-<img src="/Users/lzw/curious-courses/google/img/zhs_register.png" alt="zhs_register" style="zoom:50%;" />
+<img src="./img/zhs_register.png" alt="zhs_register" style="zoom:50%;" />
 
 注册好了后。接下来却发现充值购买服务，需要一些步骤。以下是我账号的截图。
 
 
 
-![zeng](/Users/lzw/curious-courses/google/img/zeng.png)
+![zeng](./img/zeng.png)
 
 
 
@@ -129,7 +129,7 @@
 
 
 
-<img src="/Users/lzw/curious-courses/google/img/zhs_telegram.png" alt="zhs_telegram" style="zoom:50%;" />
+<img src="./img/zhs_telegram.png" alt="zhs_telegram" style="zoom:50%;" />
 
 
 
@@ -137,7 +137,7 @@
 
 
 
-![telegram](/Users/lzw/curious-courses/google/img/telegram.png)
+![telegram](./img/telegram.png)
 
 下载安装好后。注意看上面的话。
 
@@ -151,7 +151,7 @@
 
 
 
-![telegram_username](/Users/lzw/curious-courses/google/img/telegram_username.png)
+![telegram_username](./img/telegram_username.png)
 
 然而小王的`Telegram`的账号是刚刚注册的，没有`username`。就像用微信没有设置微信ID一样。
 
@@ -161,7 +161,7 @@
 
 
 
-<img src="/Users/lzw/curious-courses/google/img/zhs_set.png" alt="zhs_set" style="zoom:50%;" />
+<img src="./img/zhs_set.png" alt="zhs_set" style="zoom:50%;" />
 
 
 
