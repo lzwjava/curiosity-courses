@@ -874,9 +874,73 @@ alias python=/usr/local/Cellar/python@3.9/3.9.1_6/bin/python3
 alias pip=/usr/local/Cellar/python@3.9/3.9.1_6/bin/pip3
 ```
 
-意思是指定一个版本的`Python`和 `pip`。
+意思是指定一个版本的`python`和 `pip`。一种方式是可以`Homebrew`来安装。也可以从源代码构建安装。
+
+```shell
+make
+make test
+make install
+```
+
+```shell
+$ redis-server
+87684:C 10 Mar 2021 14:46:06.056 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+87684:C 10 Mar 2021 14:46:06.056 # Redis version=6.2.1, bits=64, commit=00000000, modified=0, pid=87684, just started
+87684:C 10 Mar 2021 14:46:06.056 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+87684:M 10 Mar 2021 14:46:06.057 * Increased maximum number of open files to 10032 (it was originally set to 4864).
+87684:M 10 Mar 2021 14:46:06.057 * monotonic clock: POSIX clock_gettime
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 6.2.1 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 87684
+  `-._    `-._  `-./  _.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |           http://redis.io
+  `-._    `-._`-.__.-'_.-'    _.-'
+ |`-._`-._    `-.__.-'    _.-'_.-'|
+ |    `-._`-._        _.-'_.-'    |
+  `-._    `-._`-.__.-'_.-'    _.-'
+      `-._    `-.__.-'    _.-'
+          `-._        _.-'
+              `-.__.-'
+
+87684:M 10 Mar 2021 14:46:06.058 # Server initialized
+87684:M 10 Mar 2021 14:46:06.058 * Ready to accept connections
+```
+
+可见我们已经安装上了。版本号`6.2.1`，是官网最新的。打开另外一个终端窗口。可以试着把玩一下：
 
 
+
+```shell
+$ redis-cli
+127.0.0.1:6379> set a 2
+OK
+127.0.0.1:6379> get a
+"2"
+```
+
+运行一下代码。
+
+```python
+import redis
+
+r = redis.Redis(host='localhost', port=6379, db=0)
+r.set('foo', 'bar')
+print(r.get('foo'))
+```
+
+输出：
+
+```shell
+$ python fib_redis.py
+b'bar'
+```
+
+当然，我们可以将斐波那契数列写成`Redis`版本的。这里留给读者练习好了。
 
 
 
