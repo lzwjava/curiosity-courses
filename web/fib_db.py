@@ -42,7 +42,7 @@ def save():
     create_table(cur)
     for vv in v:
         if vv != -1:
-            cur.execute('INSERT INTO vs VALUES(' + str(vv) + ')')
+            cur.execute("INSERT INTO vs VALUES('" +str(vv) + "')")
         else:
             break
     con.commit()

@@ -821,3 +821,22 @@ Traceback (most recent call last):
 ValueError: invalid literal for int() with base 10: '1.22001604151219e+19'
 ```
 
+改一改：
+
+```python
+cur.execute("INSERT INTO vs VALUES('" +str(vv) + "')")
+```
+
+原来注意到这里我们把`INSERT`语句两边的单引号改成了双引号，同时给我们的数字字符串加了引号。如果之前这样写，数据库把我们的字符串当成了数字，而如今，这样用引号括起来，则表示是字符串。
+
+
+
+然后就正确了。然而如何把之前的错误数据清空掉。
+
+```sqlite
+$ sqlite3 fib.db
+SQLite version 3.32.3 2020-06-18 14:16:19
+Enter ".help" for usage hints.
+sqlite> delete * from vs;
+```
+
