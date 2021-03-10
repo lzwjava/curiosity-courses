@@ -1,4 +1,5 @@
-import json
+import sqlite3
+
 v = []
 for x in range(1000000):
    v.append(-1)
@@ -22,27 +23,34 @@ def f(n):
       v[n] = a
       return v[n]
 
+def create_table(cur: sqlite3.Connection):
+    cur.execute('CREATE TABLE IF NOT EXISTS vs(v text)')
+
 def read():
-    file = open('fib_j', 'r')
-    s = file.read()
-    sv = json.loads(s)
-    for i in range(len(sv)):
-        v[i] = sv[i]
-            
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()    
+    create_table(cur)
+    i = 0
+    for row in cur.execute('SELECT * from vs'):
+        v[i] = int(row[0])
+        i += 1
+    con.close()
 
 def save():
-    sv = []
-    for i in range(len(v)):
-        if v[i] != -1:
-            sv.append(v[i])
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()
+    create_table(cur)
+    for vv in v:
+        if vv != -1:
+            cur.execute('INSERT INTO vs VALUES(' + str(vv) + ')')
         else:
-            break        
-    file = open('fib_j', 'w')
-    json.dump(sv, file)
-    file.close()
+            break
+    con.commit()
+    con.close()
 
 read()
-fplus(100)
-save()
-
-        
+for i in range(10):
+    print(v[i])
+# fplus(10)
+# save()
+            

@@ -473,5 +473,331 @@ save()
 
 
 
+如果数据很大结构很复杂怎么办。用文件保存的方式会变得很慢很繁琐。这会引入了`数据库`。也就相当于可编程的`Excel`表。可以很方便用代码进行增删改查的`Excel`表。
 
+
+
+在官网文档找到例子。
+
+```python
+import sqlite3
+con = sqlite3.connect('example.db')
+```
+
+```python
+cur = con.cursor()
+
+# Create table
+cur.execute('''CREATE TABLE stocks
+               (date text, trans text, symbol text, qty real, price real)''')
+
+# Insert a row of data
+cur.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+
+# Save (commit) the changes
+con.commit()
+
+# We can also close the connection if we are done with it.
+# Just be sure any changes have been committed or they will be lost.
+con.close()
+```
+
+```python
+for row in cur.execute('SELECT * FROM stocks ORDER BY price'):
+        print(row)
+```
+
+`cursor`表示游标，也就像光标一样。上面是连接数据库、建表、插入数据、提交更改、关闭连接的意思。最后面的例子则是查询数据的一个示例。
+
+```python
+import sqlite3
+
+v = []
+for x in range(1000000):
+   v.append(-1)
+
+def create_table(cur: sqlite3.Connection):
+    cur.execute('CREATE TABLE vs(v text)')
+
+def read():
+    pass
+
+def save():
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()
+    create_table(cur)
+    for vv in v:
+        if vv != -1:
+            cur.execute('INSERT INTO vs VALUES(' + str(vv) + ')')
+        else:
+            break
+    con.commit()
+    con.close()
+
+fplus(10)
+save()
+```
+
+写好了。试试看。
+
+
+
+我电脑上已经有了`sqlite3`。
+
+```shell
+$ sqlite3
+SQLite version 3.32.3 2020-06-18 14:16:19
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+```
+
+```sqlite
+sqlite> .help
+.auth ON|OFF             Show authorizer callbacks
+.backup ?DB? FILE        Backup DB (default "main") to FILE
+.bail on|off             Stop after hitting an error.  Default OFF
+.binary on|off           Turn binary output on or off.  Default OFF
+.cd DIRECTORY            Change the working directory to DIRECTORY
+.changes on|off          Show number of rows changed by SQL
+.check GLOB              Fail if output since .testcase does not match
+.clone NEWDB             Clone data into NEWDB from the existing database
+.databases               List names and files of attached databases
+.dbconfig ?op? ?val?     List or change sqlite3_db_config() options
+.dbinfo ?DB?             Show status information about the database
+.dump ?TABLE?            Render database content as SQL
+.echo on|off             Turn command echo on or off
+.eqp on|off|full|...     Enable or disable automatic EXPLAIN QUERY PLAN
+.excel                   Display the output of next command in spreadsheet
+.exit ?CODE?             Exit this program with return-code CODE
+.expert                  EXPERIMENTAL. Suggest indexes for queries
+.explain ?on|off|auto?   Change the EXPLAIN formatting mode.  Default: auto
+.filectrl CMD ...        Run various sqlite3_file_control() operations
+.fullschema ?--indent?   Show schema and the content of sqlite_stat tables
+.headers on|off          Turn display of headers on or off
+.help ?-all? ?PATTERN?   Show help text for PATTERN
+.import FILE TABLE       Import data from FILE into TABLE
+.imposter INDEX TABLE    Create imposter table TABLE on index INDEX
+.indexes ?TABLE?         Show names of indexes
+.limit ?LIMIT? ?VAL?     Display or change the value of an SQLITE_LIMIT
+.lint OPTIONS            Report potential schema issues.
+.log FILE|off            Turn logging on or off.  FILE can be stderr/stdout
+.mode MODE ?TABLE?       Set output mode
+.nullvalue STRING        Use STRING in place of NULL values
+.once ?OPTIONS? ?FILE?   Output for the next SQL command only to FILE
+.open ?OPTIONS? ?FILE?   Close existing database and reopen FILE
+.output ?FILE?           Send output to FILE or stdout if FILE is omitted
+.parameter CMD ...       Manage SQL parameter bindings
+.print STRING...         Print literal STRING
+.progress N              Invoke progress handler after every N opcodes
+.prompt MAIN CONTINUE    Replace the standard prompts
+.quit                    Exit this program
+.read FILE               Read input from FILE
+.recover                 Recover as much data as possible from corrupt db.
+.restore ?DB? FILE       Restore content of DB (default "main") from FILE
+.save FILE               Write in-memory database into FILE
+.scanstats on|off        Turn sqlite3_stmt_scanstatus() metrics on or off
+.schema ?PATTERN?        Show the CREATE statements matching PATTERN
+.selftest ?OPTIONS?      Run tests defined in the SELFTEST table
+.separator COL ?ROW?     Change the column and row separators
+.session ?NAME? CMD ...  Create or control sessions
+.sha3sum ...             Compute a SHA3 hash of database content
+.shell CMD ARGS...       Run CMD ARGS... in a system shell
+.show                    Show the current values for various settings
+.stats ?on|off?          Show stats or turn stats on or off
+.system CMD ARGS...      Run CMD ARGS... in a system shell
+.tables ?TABLE?          List names of tables matching LIKE pattern TABLE
+.testcase NAME           Begin redirecting output to 'testcase-out.txt'
+.testctrl CMD ...        Run various sqlite3_test_control() operations
+.timeout MS              Try opening locked tables for MS milliseconds
+.timer on|off            Turn SQL timer on or off
+.trace ?OPTIONS?         Output each SQL statement as it is run
+.vfsinfo ?AUX?           Information about the top-level VFS
+.vfslist                 List all available VFSes
+.vfsname ?AUX?           Print the name of the VFS stack
+.width NUM1 NUM2 ...     Set column widths for "column" mode
+```
+
+可以看到有很多的命令。其中`.quit`表示退出。
+
+
+
+没有的话可以到官网下载，或者运行`brew install sqlite`来安装。
+
+```shell
+$ sqlite3 fib.db
+```
+
+```sqlite
+sqlite> show tables
+   ...> ;
+Error: near "show": syntax error
+sqlite> tables;
+Error: near "tables": syntax error
+sqlite> .schema
+CREATE TABLE vs(v text);
+```
+
+一开始我以为像`MySQL`一样。可以用`show tables`来看看有哪些表。后来发现在`SQLite`是这样。`MySQL`是另外一种数据库，也是未来我们要学的。
+
+```sqlite
+sqlite> select * from vs;
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+55
+```
+
+果然，我们正确写入了数据。注意我们用的是`text`，因为我们数字很大，可能数据库的整数类型保存不了。
+
+```python
+import sqlite3
+
+v = []
+for x in range(1000000):
+   v.append(-1)
+
+def fplus(n):
+   if n > 800:         
+      fplus(n-800)
+      return f(n)
+   else:
+      return f(n)
+
+def f(n):
+   if v[n] != -1:
+      return v[n]
+   else:
+      a = 0
+      if n < 2:
+         a = n
+      else:
+         a = f(n-1) + f(n-2)
+      v[n] = a
+      return v[n]
+
+def create_table(cur: sqlite3.Connection):
+    cur.execute('CREATE TABLE vs(v text)')
+
+def read():
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()    
+    create_table(cur)
+    i = 0
+    for row in cur.execute('SELECT * from vs'):
+         v[i] = int(row)
+    con.close()
+
+def save():
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()
+    create_table(cur)
+    for vv in v:
+        if vv != -1:
+            cur.execute('INSERT INTO vs VALUES(' + str(vv) + ')')
+        else:
+            break
+    con.commit()
+    con.close()
+
+read()
+for i in range(10):
+    print(v[i])
+```
+
+我们继续加上`read`函数。然而运行后，出现了错误。
+
+```python
+$ python fib_db.py
+  ...
+  File "fib_db.py", line 27, in create_table
+    cur.execute('CREATE TABLE vs(v text)')
+sqlite3.OperationalError: table vs already exists
+```
+
+我们无法再创建表，表已经存在了。将语法稍稍改下。
+
+```python
+def create_table(cur: sqlite3.Connection):
+    cur.execute('CREATE TABLE IF NOT EXISTS vs(v text)')
+```
+
+然而出现了错误。
+
+```shell
+    v[i] = int(row)
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'tuple'
+```
+
+`tuple`是什么。意思是row返回了`tuple`。让我们打印一下。
+
+```python
+    for row in cur.execute('SELECT * from vs'):
+        print(row)
+        v[i] = int(row)
+```
+
+结果为：
+
+```shell
+('0',)
+```
+
+其实`tuple`和数组差不多。只不过它的元素可以是彼此不一样的，不像数组里的元素都得是同一类型。
+
+```python
+def read():
+    con = sqlite3.connect('fib.db')
+    cur = con.cursor()    
+    create_table(cur)
+    i = 0
+    for row in cur.execute('SELECT * from vs'):
+        v[i] = int(row[0])
+    con.close()
+```
+
+这么改。然而很奇怪。输出是这样：
+
+```shell
+55
+-1
+-1
+-1
+-1
+-1
+-1
+-1
+-1
+-1
+```
+
+原来是我们的`i`没有自增。
+
+```python
+    for row in cur.execute('SELECT * from vs'):
+        v[i] = int(row[0])
+        i += 1
+```
+
+这样就对了。
+
+```shell
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+```
 
