@@ -31,7 +31,7 @@ def read():
     cur = con.cursor()    
     create_table(cur)
     i = 0
-    for row in cur.execute('SELECT * from vs'):
+    for row in cur.execute('SELECT * FROM vs'):
         v[i] = int(row[0])
         i += 1
     con.close()
@@ -49,8 +49,8 @@ def save():
     con.close()
 
 read()
-for i in range(10):
-    print(v[i])
-# fplus(10)
-# save()
+# for i in range(10):
+#     print(v[i])
+fplus(100)
+save()
             

@@ -801,3 +801,23 @@ def read():
 34
 ```
 
+然而我们注意到，当数字很大的时候，在数据库里保存的样子是这样的：
+
+```shell
+4660046610375530309
+7540113804746346429
+1.22001604151219e+19
+1.97402742198682e+19
+3.19404346349901e+19
+```
+
+再运行一下是这样的。
+
+```shell
+$ python fib_db.py
+Traceback (most recent call last):
+  File "fib_db.py", line 35, in read
+    v[i] = int(row[0])
+ValueError: invalid literal for int() with base 10: '1.22001604151219e+19'
+```
+
