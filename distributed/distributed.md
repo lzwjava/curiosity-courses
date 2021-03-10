@@ -2,7 +2,7 @@
 
 
 
-说起云计算，似乎离不开很多的工具，Hadoop、Hive、Nginx、ZooKeeper、Docker、Kubernetes、Spark、Kafka、MongoDB、Flink、Druid、Presto、Kylin。都有听过吗。我们试着把他们都安装上，试着把玩两下。
+说起云计算，似乎离不开很多的工具，Hadoop、Hive、Hbase、Nginx、ZooKeeper、Docker、Kubernetes、Spark、Kafka、MongoDB、Flink、Druid、Presto、Kylin。都有听过吗。我们试着把他们都安装上，试着把玩两下。
 
 
 
@@ -693,7 +693,11 @@ $ cat output/*
 
 
 
-## 
+##Kubernetes
+
+
+
+
 
 
 
