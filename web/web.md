@@ -850,8 +850,6 @@ sqlite> delete * from vs;
 
 打开Redis官网，第一句话是说，Redis是一种开源的内存型的数据结构存储，常用于数据库和缓存。`Redis`很常用。可到官网安装`Redis`。就像`SQLite`一样。安装完毕后，那如何在`Python`使用`Redis`呢。
 
-
-
 ```shell
 pip install redis
 ```
@@ -865,7 +863,20 @@ True
 b'bar'
 ```
 
-Python文档给了一些例子。
+Python文档给了一些例子。这里出现了像`pip`的东西。`pip`是包管理工具。包管理工具是什么，可到「熟悉编程环境」一章查阅。`pip`之于`python`，就好像`Homebrew`之于`macOS`系统。
+
+
+
+`pip`通常在安装`python`时已经自带了。如果电脑有很多版本的`Python`和 `Redis`，可以在`~/.bash_profile`中加入以下两行：
+
+```shell
+alias python=/usr/local/Cellar/python@3.9/3.9.1_6/bin/python3
+alias pip=/usr/local/Cellar/python@3.9/3.9.1_6/bin/pip3
+```
+
+意思是指定一个版本的`Python`和 `pip`。
+
+
 
 
 
