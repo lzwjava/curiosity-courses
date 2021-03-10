@@ -49,8 +49,5 @@ def save():
     con.close()
 
 read()
-# for i in range(10):
-#     print(v[i])
 fplus(100)
 save()
-            

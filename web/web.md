@@ -840,3 +840,32 @@ Enter ".help" for usage hints.
 sqlite> delete * from vs;
 ```
 
+接下来可以试试其他语句。`增删改查`。我们这里举了`增删查`的例子。
+
+
+
+## Redis
+
+
+
+打开Redis官网，第一句话是说，Redis是一种开源的内存型的数据结构存储，常用于数据库和缓存。`Redis`很常用。可到官网安装`Redis`。就像`SQLite`一样。安装完毕后，那如何在`Python`使用`Redis`呢。
+
+
+
+```shell
+pip install redis
+```
+
+```shell
+>>> import redis
+>>> r = redis.Redis(host='localhost', port=6379, db=0)
+>>> r.set('foo', 'bar')
+True
+>>> r.get('foo')
+b'bar'
+```
+
+Python文档给了一些例子。
+
+
+
