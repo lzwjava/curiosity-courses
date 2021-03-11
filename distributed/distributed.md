@@ -1,9 +1,15 @@
 ## 云计算和大数据分析
 
+这节课包含以下话题：
 
+* Spark
+* Hadoop
+* Kubernetes
+* Docker
+* Flink
+* MongoDB
 
 说起云计算，似乎离不开很多的工具，Hadoop、Hive、Hbase、ZooKeeper、Docker、Kubernetes、Spark、Kafka、MongoDB、Flink、Druid、Presto、Kylin、Elastic Search。都有听过吗。这些工具有些我是从`大数据工程师`、`分布式后端工程师`上找到的。这些都是高薪职位。我们试着把他们都安装上，试着把玩两下。
-
 
 
 ## 初探 Spark
@@ -693,7 +699,7 @@ $ cat output/*
 
 
 
-##Kubernetes
+## Kubernetes
 
 
 
