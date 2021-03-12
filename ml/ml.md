@@ -156,7 +156,70 @@ print(len(train_labels))
 60000
 ```
 
-继续。
+接着试试打印出图片来。
+
+```python
+print(train_images[0])
+```
+
+看下结果。
+
+```shell
+[[  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+    0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   1   0   0  13  73   0
+    0   1   4   0   0   0   0   1   1   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   3   0  36 136 127  62
+   54   0   0   0   1   3   4   0   0   3]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   6   0 102 204 176 134
+  144 123  23   0   0   0   0  12  10   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 155 236 207 178
+  107 156 161 109  64  23  77 130  72  15]
+ [  0   0   0   0   0   0   0   0   0   0   0   1   0  69 207 223 218 216
+  216 163 127 121 122 146 141  88 172  66]]
+  ....
+```
+
+这里节选了部分结果。
+
+```python
+print(len(train_images[0][0]))
+```
+
+输出`28`。所以很清楚，这是一个横宽为28的矩阵。继续打印。
+
+```python
+    print(len(train_images[0][0][0])
+TypeError: object of type 'numpy.uint8' has no len()
+```
+
+所以很明白。每张图片都是`28*28*3`的数组。最后一维数组保存的是rgb值。然而发现我们的想法可能是错的。
+
+```python
+print(train_images[0][1][20])
+```
+
+```shell
+0
+```
+
+```python
+print(train_images[0][1])
+```
+
+```shell
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+```
+
+说明每张图片是28*28的数组。捣鼓了一阵。我们终于知道了秘密。
+
+
+
+先来看看输出的图。
 
 ```python
 plt.figure()
@@ -167,6 +230,20 @@ plt.show()
 ```
 
 <img src="./img/tf.png" alt="tf" style="zoom:30%;" />
+
+看到右边的颜色条吗。`0`到`250`。原来这是在两种颜色里的渐变。可是它怎么知道是哪两种颜色。我们哪里告诉它了。
+
+
+
+接着我们把第二张图也打印出来。
+
+```python
+plt.imshow(train_images[1])
+```
+
+<img src="./img/plt.png" alt="plt" style="zoom:30%;" />
+
+很有意思。这难道是`pyplot`依赖库默认的吗。继续运行官网给的代码。
 
 ```python
 plt.figure(figsize=(10,10))
@@ -182,7 +259,72 @@ plt.show()
 
 <img src="./img/tf2.png" alt="tf2" style="zoom:20%;" />
 
-注意到这里显示了图片以及它们的分类。
+注意到这里显示了图片以及它们的分类。终于我们知道了`cmp`参数。如果`cmp`什么都不写，一定会是刚刚我们那种色彩的。果然。
+
+
+
+```shell
+    plt.imshow(train_images[i])
+```
+
+<img src="./img/cmap.png" alt="cmap" style="zoom:20%;" />
+
+这会我们搜索`pyplot cmap`。找到一些资料。
+
+```shell
+    plt.imshow(train_images[i], cmap=plt.cm.PiYG)
+```
+
+<img src="./img/cmap1.png" alt="cmap1" style="zoom:20%;" />
+
+改一下代码。
+
+
+```python
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(2,5,i+1)   ## 改这行
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.Blues)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+```
+
+然而报错了。
+
+```shell
+ValueError: num must be 1 <= num <= 10, not 11
+```
+
+这意味着什么。之前的`5,5,i+1`到底什么意思。为什么改成`2`就不行了。尽管我们直观地知道大概是5行5列的意思。但为什么会报这个错误。`11`是怎么计算出来的。`num`又是什么意思。`10`是什么意思。注意到`2*5=10`。所以也许当`i=11`的时候出错了。当改成`for i in range(10):`时，得到了以下结果。
+
+<img src="./img/plot3.png" alt="plot3" style="zoom:20%;" />
+
+这会稍微看一下文档，得知`subplot(nrows, ncols, index, **kwargs)`。嗯，到此我们很明白了。
+
+
+
+```python
+plt.figure(figsize=(10,10))
+for i in range(25):
+    plt.subplot(5,5,i+1)
+    # plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.Blues)
+    plt.xlabel(class_names[train_labels[i]])
+plt.show()
+```
+
+<img src="./img/plot_xticks.png" alt="plot_xticks" style="zoom:30%;" />
+
+注意到`0 25`这种就叫`xticks`。当我们放大缩小这个框的时候，会有不同的展示。
+
+![plot_scale](./img/plot_scale.png)
+
+注意到放大缩小框，`xticks`和`xlabels`会有不同的显示。
 
 ```python
 model = tf.keras.Sequential([
@@ -202,7 +344,7 @@ test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 print('\nTest accuracy:', test_acc)
 ```
 
-注意到了这里定义model的方式，用到了类`Sequential`。注意这些参数，`28,28`、`128`、`relu`、`10`。注意到需要`compile`和`fit`。`fit`是拟合的意思。
+注意到了这里定义model的方式，用到了类`Sequential`。注意这些参数，`28,28`、`128`、`relu`、`10`。注意到需要`compile`和`fit`。`fit`是拟合的意思。注意到`28,28`就是图形大小。
 
 ```shell
 Epoch 1/10
@@ -230,7 +372,147 @@ Epoch 10/10
 Test accuracy: 0.879800021648407
 ```
 
-模型已经训练出来了。
+模型已经训练出来了。来改下参数。
+
+```shell
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(28, activation='relu'),    # 128 -> 28
+    tf.keras.layers.Dense(10)
+])
+```
+
+修改一下`Dense`的第一个参数。
+
+```shell
+Epoch 1/10
+1875/1875 [==============================] - 2s 714us/step - loss: 6.9774 - accuracy: 0.3294
+Epoch 2/10
+1875/1875 [==============================] - 1s 715us/step - loss: 1.3038 - accuracy: 0.4831
+Epoch 3/10
+1875/1875 [==============================] - 1s 747us/step - loss: 1.0160 - accuracy: 0.6197
+Epoch 4/10
+1875/1875 [==============================] - 1s 800us/step - loss: 0.7963 - accuracy: 0.6939
+Epoch 5/10
+1875/1875 [==============================] - 2s 893us/step - loss: 0.7006 - accuracy: 0.7183
+Epoch 6/10
+1875/1875 [==============================] - 1s 747us/step - loss: 0.6675 - accuracy: 0.7299
+Epoch 7/10
+1875/1875 [==============================] - 1s 694us/step - loss: 0.6681 - accuracy: 0.7330
+Epoch 8/10
+1875/1875 [==============================] - 1s 702us/step - loss: 0.6675 - accuracy: 0.7356
+Epoch 9/10
+1875/1875 [==============================] - 1s 778us/step - loss: 0.6508 - accuracy: 0.7363
+Epoch 10/10
+1875/1875 [==============================] - 1s 732us/step - loss: 0.6532 - accuracy: 0.7350
+313/313 - 0s - loss: 0.6816 - accuracy: 0.7230
+
+Test accuracy: 0.7229999899864197
+```
+
+注意到`Test accuracy`前后发生了变化。`Epoch`这样的是`fit`函数输出的日志。注意到当是`128`时，`accuracy`从`0.7769`变到`0.9086`。而当是`28`时，`accuracy`从`0.3294`变到`0.7350`。这会注意到，我们先是用训练集，来调优`loss`和`accuracy`。接着用测试数据集来测试。先来看看`train_labels`。
+
+```python
+print(train_labels)
+[9 0 0 ... 3 0 5]
+print(len(train_labels))
+60000
+```
+
+这意味着用`0到9`来表示这些类别。刚好`class_names`也是有10个。
+
+```shell
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+```
+
+再来改一改。
+
+```python
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(28, activation='relu'),
+    tf.keras.layers.Dense(5)   # 10 -> 5
+])
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+model.fit(train_images, train_labels, epochs=10)
+```
+
+出错了。
+
+```shell
+tensorflow.python.framework.errors_impl.InvalidArgumentError:  Received a label value of 9 which is outside the valid range of [0, 5).  Label values: 4 3 2 9 4 1 6 0 7 9 1 6 5 2 3 8 6 3 8 0 3 5 6 1 2 6 3 6 8 4 8 4
+         [[node sparse_categorical_crossentropy/SparseSoftmaxCrossEntropyWithLogits/SparseSoftmaxCrossEntropyWithLogits (defined at /curiosity-courses/ml/tf/image.py:53) ]] [Op:__inference_train_function_538]
+
+Function call stack:
+train_function
+```
+
+改成把`Sequential`的第三个参数`Dense`的参数改成`15`就可以了。结果区别不大。试试改改`Epoch`。
+
+
+
+```python
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(28, activation='relu'),
+    tf.keras.layers.Dense(15)
+])
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+model.fit(train_images, train_labels, epochs=15)  # 10 -> 15
+
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print('\nTest accuracy:', test_acc)
+```
+
+
+
+```shell
+Epoch 1/15
+1875/1875 [==============================] - 2s 892us/step - loss: 6.5778 - accuracy: 0.3771
+Epoch 2/15
+1875/1875 [==============================] - 2s 872us/step - loss: 1.3121 - accuracy: 0.4910
+Epoch 3/15
+1875/1875 [==============================] - 2s 909us/step - loss: 1.0900 - accuracy: 0.5389
+Epoch 4/15
+1875/1875 [==============================] - 1s 730us/step - loss: 1.0422 - accuracy: 0.5577
+Epoch 5/15
+1875/1875 [==============================] - 1s 709us/step - loss: 0.9529 - accuracy: 0.5952
+Epoch 6/15
+1875/1875 [==============================] - 1s 714us/step - loss: 0.9888 - accuracy: 0.5950
+Epoch 7/15
+1875/1875 [==============================] - 1s 767us/step - loss: 0.8678 - accuracy: 0.6355
+Epoch 8/15
+1875/1875 [==============================] - 1s 715us/step - loss: 0.8247 - accuracy: 0.6611
+Epoch 9/15
+1875/1875 [==============================] - 1s 721us/step - loss: 0.8011 - accuracy: 0.6626
+Epoch 10/15
+1875/1875 [==============================] - 1s 711us/step - loss: 0.8024 - accuracy: 0.6622
+Epoch 11/15
+1875/1875 [==============================] - 1s 781us/step - loss: 0.7777 - accuracy: 0.6696
+Epoch 12/15
+1875/1875 [==============================] - 1s 724us/step - loss: 0.7764 - accuracy: 0.6728
+Epoch 13/15
+1875/1875 [==============================] - 1s 731us/step - loss: 0.7688 - accuracy: 0.6767
+Epoch 14/15
+1875/1875 [==============================] - 1s 715us/step - loss: 0.7592 - accuracy: 0.6793
+Epoch 15/15
+1875/1875 [==============================] - 1s 786us/step - loss: 0.7526 - accuracy: 0.6792
+313/313 - 0s - loss: 0.8555 - accuracy: 0.6418
+
+Test accuracy: 0.6417999863624573
+```
+
+注意改成15。区别也不大。` tf.keras.layers.Dense(88, activation='relu'),`是重要的。试着128改成88。得到了`Test accuracy: 0.824999988079071`。128时，是`0.879800021648407`。28时，是`0.7229999899864197`。是不是越大越好，然而当改成`256`时，是`Test accuracy: 0.8409000039100647`。这不禁让我们思考`loss`和`accuracy`的含义。
 
 ```python
 probability_model = tf.keras.Sequential([model, 
@@ -313,6 +595,10 @@ plt.show()
 
 
 机器学习，就是在背后模拟类似的过程。只不过复杂一些。可能是很多的`1到100`，要猜很多数。同时每次猜都要进行很多运算。以及每次判断是否大了还是小了，要计算很多。
+
+
+
+
 
 
 
