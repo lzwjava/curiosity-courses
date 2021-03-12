@@ -6,8 +6,8 @@ from numpy.random import randint
 x = randint(100)
 y = randint(100)
 
-a_max=1000
-a_min=-1000
+a_max=100
+a_min=0
 
 def cal_d(da):
     y0 = x * da
@@ -16,7 +16,7 @@ def cal_d(da):
 def avg_a():
     return (a_max + a_min) / 2
 
-for i in range(100):
+for i in range(14):
     a = avg_a()
     max_d = cal_d(a_max)
     min_d = cal_d(a_min)
