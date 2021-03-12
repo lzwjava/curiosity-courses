@@ -23,7 +23,41 @@ $ type python
 python is aliased to `/usr/local/Cellar/python@3.9/3.9.1_6/bin/python3'
 ```
 
-然而 `Tensorflow 2`只支持 `Python 3.5–3.8`。我们用的是`3.9`。一会再折腾吧。换别的库。
+然而 `Tensorflow 2`只支持 `Python 3.5–3.8`。我们用的是`3.9` 。 
+
+```shell
+ % type python3
+python3 is /usr/bin/python3
+% python3 -V
+Python 3.8.2
+```
+
+注意到我系统里的`python3`是`3.8.2`版本。这个Python版本对应的`pip`安装到哪儿呢。
+
+```shell
+% python3 -m pip -V
+pip 21.0.1 from /Users/lzw/Library/Python/3.8/lib/python/site-packages/pip (python 3.8)
+```
+
+对应的`pip`在这里。那我更改一下`.zprofile`文件里。最近我更改了我的`shell`。`.zprofile`就相当于之前的`.bash_profile`。加入一行。
+
+```shell
+alias pip3=/Users/lzw/Library/Python/3.8/bin/pip3
+```
+
+这样，我们用`python3`和`pip3`来玩`Tensorflow`。
+
+
+
+```shell
+% pip3 install tensorflow
+...
+Successfully installed absl-py-0.12.0 astunparse-1.6.3 cachetools-4.2.1 certifi-2020.12.5 chardet-4.0.0 flatbuffers-1.12 gast-0.3.3 google-auth-1.27.1 google-auth-oauthlib-0.4.3 google-pasta-0.2.0 grpcio-1.32.0 h5py-2.10.0 idna-2.10 keras-preprocessing-1.1.2 markdown-3.3.4 numpy-1.19.5 oauthlib-3.1.0 opt-einsum-3.3.0 protobuf-3.15.6 pyasn1-0.4.8 pyasn1-modules-0.2.8 requests-2.25.1 requests-oauthlib-1.3.0 rsa-4.7.2 tensorboard-2.4.1 tensorboard-plugin-wit-1.8.0 tensorflow-2.4.1 tensorflow-estimator-2.4.0 termcolor-1.1.0 typing-extensions-3.7.4.3 urllib3-1.26.3 werkzeug-1.0.1 wheel-0.36.2 wrapt-1.12.1
+```
+
+安装了很多库。
+
+
 
 
 
