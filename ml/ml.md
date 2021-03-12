@@ -149,7 +149,7 @@ print(train_images.shape)
 print(len(train_labels))
 ```
 
-输出了结果。
+输出了结果。注意到这里有`train_images`、`train_labels`、`test_images`、`test_labels`。就是分为训练数据集和测试数据集。
 
 ```shell
 (60000, 28, 28)
@@ -182,21 +182,9 @@ plt.show()
 
 <img src="./img/tf2.png" alt="tf2" style="zoom:20%;" />
 
+注意到这里显示了图片以及它们的分类。
+
 ```python
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-
-model.fit(train_images, train_labels, epochs=10)
-
-test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
-
-print('\nTest accuracy:', test_acc)
-```
-
-
-
-```shell
 model = tf.keras.Sequential([
     tf.keras.layers.Flatten(input_shape=(28, 28)),
     tf.keras.layers.Dense(128, activation='relu'),
@@ -214,7 +202,7 @@ test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 print('\nTest accuracy:', test_acc)
 ```
 
-
+注意到了这里定义model的方式，用到了类`Sequential`。注意这些参数，`28,28`、`128`、`relu`、`10`。注意到需要`compile`和`fit`。`fit`是拟合的意思。
 
 ```shell
 Epoch 1/10
@@ -249,7 +237,7 @@ probability_model = tf.keras.Sequential([model,
                                          tf.keras.layers.Softmax()])
 ```
 
-接下来预测一下。
+接下来预测一下。注意到`Sequential`和上面的一样。注意到参数`model`和 `tf.keras.layers.Softmax()`。
 
 ```python
 probability_model = tf.keras.Sequential([model, 
@@ -298,7 +286,33 @@ plt.show()
 
 <img src="./img/pred.png" alt="pred" style="zoom:50%;" />
 
-这说明这个图片99%的可能是`Ankle boot`。我们已经跑起来了。上面代码都是什么意思。我们慢慢来探索。
+这说明这个图片99%的可能是`Ankle boot`。注意到`plot_image`是显示左边的图。`plot_value_array`是输出右边的图。
+
+```python
+num_rows = 5
+num_cols = 3
+num_images = num_rows*num_cols
+plt.figure(figsize=(2*2*num_cols, 2*num_rows))
+for i in range(num_images):
+  plt.subplot(num_rows, 2*num_cols, 2*i+1)
+  plot_image(i, predictions[i], test_labels, test_images)
+  plt.subplot(num_rows, 2*num_cols, 2*i+2)
+  plot_value_array(i, predictions[i], test_labels)
+plt.tight_layout()
+plt.show()
+```
+
+<img src="./img/pred1.png" alt="pred1" style="zoom:50%;" />
+
+注意到这里只是显示更多的测试结果。所以使用流程我们大致很清楚。所以我们还不知道背后怎么计算的。但我们知道如何使用它们。它们背后是微积分。如何理解微积分呢。
+
+
+
+比如说有个数字，1到100让你猜。每次你猜多少。我告诉你小了还是大了。你猜50。我说小了。你猜80。我说大了。你猜65。我说大了。你猜55。我说小了。你猜58。我说，嗯，猜对了。
+
+
+
+机器学习，就是在背后模拟类似的过程。只不过复杂一些。可能是很多的`1到100`，要猜很多数。同时每次猜都要进行很多运算。以及每次判断是否大了还是小了，要计算很多。
 
 
 
