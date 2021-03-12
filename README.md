@@ -24,6 +24,7 @@
 * [如何上Google](./google/google.md)
 * [Web 编程](./web/web.md)
 * [云计算与大数据](./distributed/distributed.md)
+* [机器学习](./ml/ml.md)
 
 
 
