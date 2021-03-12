@@ -37,18 +37,17 @@ for i in range(100):
         a_min = a
     else:
         a_max = a
-    
-    a = avg_a()
-    max_db = cal_db(a, b_max)
-    min_db = cal_db(a, b_min)
-    if max_db < min_db:
-        b_min = b        
-    else:
-        b_max = b
+    # a = avg_a()
+    # max_db = cal_db(a, b_max)
+    # min_db = cal_db(a, b_min)
+    # if max_db < min_db:
+    #     b_min = b        
+    # else:
+    #     b_max = b
 
 print(x)
 print(y)
 print('a = ', avg_a())
 print('b = ', avg_b())
-print(avg_a() * x[0] + avg_b())
-print(avg_a() * x[1] + avg_b())
+print('y[0]=', avg_a() * x[0] + avg_b())
+print('y[1]=', avg_a() * x[1] + avg_b())
