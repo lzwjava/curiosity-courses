@@ -1,4 +1,4 @@
-class Solution:
+# class Solution:
     def smallerNumbersThanCurrent(self, nums: [int]) -> [int]:
         ss = sorted((e,i) for i,e in enumerate(nums))
 
