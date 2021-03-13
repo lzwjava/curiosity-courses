@@ -12,4 +12,4 @@ class Solution:
             greatests.append(False)
         return greatests
 
-print(Solution().kidsWithCandies([2,3,5,1,3], 3))
+# print(Solution().kidsWithCandies([2,3,5,1,3], 3))
