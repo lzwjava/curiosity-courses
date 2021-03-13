@@ -16,4 +16,4 @@ class Solution:
           ns[j1] = last
         return ns
 
-print(Solution().smallerNumbersThanCurrent([8,1,2,2,3]))
+# print(Solution().smallerNumbersThanCurrent([8,1,2,2,3]))
