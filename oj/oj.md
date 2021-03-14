@@ -510,6 +510,111 @@ class Solution:
 
 
 
+再来一种解法。
+
+```python
+class Solution:
+    def smallerNumbersThanCurrent(self, nums: [int]) -> [int]:
+      l = len(nums)
+      n = [0] * 101
+      max_num = 0
+      for num in nums:
+        n[num] += 1
+        if num > max_num:
+          max_num = num
+
+      sm = [0] * (max_num + 1)
+      sum = 0
+      for i in range(max_num+1):
+        sm[i] = sum
+        sum += n[i]
+      
+      ns = [0] * l
+      for i in range(l):
+        ns[i] = sm[nums[i]]
+
+      return ns
+
+# print(Solution().smallerNumbersThanCurrent([8,1,2,2,3]))
+```
+
+
+
+来个稍微复杂的。
+
+```python
+class Solution:
+    def smallerNumbersThanCurrent(self, nums: [int]) -> [int]:
+      l = len(nums)
+      n = [0] * 101
+      max_num = 0
+      for num in nums:
+        n[num] += 1
+        if num > max_num:
+          max_num = num
+
+      short_n = []
+      short_num = [] * l
+      zn = [0] * 101
+      j = 0
+      for i in range(max_num+1):
+        if n[i] > 0:
+          zn[i] = j          
+          short_n.append(n[i])          
+          short_num.append(num)
+          j+=1
+
+      sm = [0] * j
+      sum = 0
+      for i in range(j):
+        sm[i] = sum
+        sum += short_n[i]
+      
+      ns = [0] * l
+      for i in range(l):
+        ns[i] = sm[zn[nums[i]]]
+      return ns
+
+# print(Solution().smallerNumbersThanCurrent([8,1,2,2,3]))
+```
+
+
+
+```python
+class Solution:    
+ 
+    def smallerNumbersThanCurrent(self, nums: [int]) -> [int]:
+      max_num =max(nums)
+
+      n = [0] * (max_num + 1)
+      for num in nums:
+        n[num] += 1
+
+      sorted_ls = []
+      for i in range(max_num + 1):
+        if n[i] > 0:
+          sorted_ls.append(i)
+
+      sm = [0] * (max_num + 1)
+      sum = 0
+      for i in range(len(sorted_ls)):
+        v = sorted_ls[i]
+        sm[v] = sum
+        sum += n[v]
+      
+      ns = [] 
+      for i in range(len(nums)):
+        ns.append(sm[nums[i]])
+      return ns
+
+
+# print(Solution().smallerNumbersThanCurrent([72,48,32,16,10,59,83,38,1,4,68,7,67,16,5,35,99,15,55,11,24,3,63,81,16,95,35,87,24,84,57,49,42,80,34,33,82,81,31,31,7,75,100,75,22,44,54,77,89,71,81,66,7]))
+```
+
+
+
+
+
 ## 练习
 
 
