@@ -1,4 +1,4 @@
-class Solution:    
+class Solution:
  
     def smallerNumbersThanCurrent(self, nums: [int]) -> [int]:
       max_num =max(nums)
