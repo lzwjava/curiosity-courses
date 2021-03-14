@@ -1362,7 +1362,7 @@ Stopping taskexecutor daemon (pid: 41812) on host lzwjava.
 > 2. Build Cube from the identified tables.
 > 3. Query using ANSI-SQL and get results in sub-second, via ODBC, JDBC or RESTful API.
 
-![kylin_diagram](/Users/lzw/curiosity-courses/distributed/img/kylin_diagram.png)
+![kylin_diagram](./img/kylin_diagram.png)
 
 
 
