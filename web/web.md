@@ -1,6 +1,153 @@
 # Web 编程
 
-上期讲到把我们的菲波那切数列功能做成`Web`接口。接下来继续探索吧。
+上期讲到我们把斐波那契数列功能，改写成了面向对象的版本，实现了一个终端接口。
+
+`server.py`：
+
+```python
+class BaseHandler:
+  def handle(self, request:str):
+    pass
+
+class Server:
+  def __init__(self, handlerClass):
+    self.handlerClass = handlerClass
+
+  def run(self):    
+    while True:
+      request = input()
+      self.handlerClass().handle(request)
+```
+
+`fib_handle.py`：
+
+```python
+from fib import f
+from server import BaseHandler, Server
+
+class FibHandler(BaseHandler):
+  def handle(self, request:str):
+    n = int(request)
+    print('f(n)=', f(n))
+    pass
+
+server = Server(FibHandler)
+server.run()  
+```
+
+
+## 简单 Web 服务器
+
+那如何改成`Web`接口呢。
+
+我们把上面的`Server`换成`HTTP协议`的`Server`就行了。先来看看Python中的`HTTP服务器`是怎么样的。
+
+Python 的标准库中提供了一个网页服务器。
+
+```
+python -m http.server
+```
+
+在终端中运行它。
+
+```shell
+$ python -m http.server
+Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+```
+
+在浏览器中打开便可以看到效果。
+
+<img src="./img/webserver.png" alt="webserver" style="zoom:50%;" />
+
+这把当前目录列举出来了。接着当浏览这个网页时，再回去看终端。这会，很有意思。
+
+```shell
+$ python -m http.server
+Serving HTTP on :: port 8000 (http://[::]:8000/) ...
+::1 - - [07/Mar/2021 15:30:35] "GET / HTTP/1.1" 200 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:35] code 404, message File not found
+::1 - - [07/Mar/2021 15:30:35] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+::1 - - [07/Mar/2021 15:30:38] "GET / HTTP/1.1" 200 -
+```
+
+这是网页访问日志。其中`GET`表示网页服务的一种数据访问操作。`HTTP/1.1`表示使用了 `HTTP`的`1.1`版本的协议。
+
+
+
+如何用它来打造我们的斐波那契数列服务。先网上找找样例代码，稍微改改，写一个最简单的Web服务器：
+
+```python
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+class Handler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+      self.send_response(200)
+      self.send_header('Content-type', 'text')
+      self.end_headers()
+      self.wfile.write(bytes("hi", "utf-8"))
+
+server = HTTPServer(("127.0.0.1", 8000), Handler)
+
+server.serve_forever()
+```
+
+这些是不是很眼熟。几乎跟上面我们使用`Server`是一样的。注意到`SimpleHTTPRequestHandler`不是基础类，还有一个叫`BaseHTTPRequestHandler`。``SimpleHTTPRequestHandler``相对于多处理了一些内容。这些加上斐波那契数列处理功能是容易的。
+
+
+
+这里的`127.0.0.1`表示本机的地址，`8000`表示本机的端口。端口怎么理解呢。就好像家里的一个窗户一样，是家里跟外界沟通的一个端口。`bytes`表示把字符串变成字节。`utf-8`是一种字符串编码方式。`send_response`、`send_header`和`end_headers`都是在输出一些内容，来输出`HTTP`协议所规定的内容，好能被浏览器所理解。这样我们在网页里就看到了`hi`。
+
+<img src="./img/hi.png" alt="hi" style="zoom:50%;" />
+
+
+
+接着试试再从请求从得到参数。
+
+```python
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+from fib import f
+from urllib.parse import urlparse,parse_qs
+
+class Handler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+      self.send_response(200)
+      self.send_header('Content-type', 'text')      
+      self.end_headers()
+      parsed = urlparse(self.path)
+      qs = parse_qs(parsed.query)      
+      result = ""
+      if len(qs) > 0:
+        ns = qs[0]
+        if len(ns) > 0:          
+          n = int(ns)
+          result = str(f(n))
+      self.wfile.write(bytes(result, "utf-8"))
+
+server = HTTPServer(("127.0.0.1", 8000), Handler)
+
+server.serve_forever()
+```
+
+
+
+<img src="./img/n10.png" alt="n10" style="zoom:50%;" />
+
+
+
+有点复杂吧。这里就是在解析一些参数。
+
+```shell
+self.path=/?n=3
+parsed=ParseResult(scheme='', netloc='', path='/', params='', query='n=3', fragment='')
+qs={'n': ['3']}
+ns=['3']
+n=3
+```
+
 
 
 ## 递归进阶
@@ -848,88 +995,6 @@ sqlite> delete * from vs;
 接下来可以试试其他语句。`增删改查`。我们这里举了`增删查`的例子。
 
 
-
-## Redis
-
-
-
-打开Redis官网，第一句话是说，Redis是一种开源的内存型的数据结构存储，常用于数据库和缓存。`Redis`很常用。可到官网安装`Redis`。就像`SQLite`一样。安装完毕后，那如何在`Python`使用`Redis`呢。
-
-```shell
-pip install redis
-```
-
-```shell
->>> import redis
->>> r = redis.Redis(host='localhost', port=6379, db=0)
->>> r.set('foo', 'bar')
-True
->>> r.get('foo')
-b'bar'
-```
-
-Python文档给了一些例子。这里出现了像`pip`的东西。`pip`是包管理工具。包管理工具是什么，可到「熟悉编程环境」一章查阅。`pip`之于`python`，就好像`Homebrew`之于`macOS`系统。
-
-
-
-`pip`通常在安装`python`时已经自带了。如果电脑有很多版本的`Python`和 `Pip`，可以在`~/.bash_profile`中加入以下两行：
-
-```shell
-alias python=/usr/local/Cellar/python@3.9/3.9.1_6/bin/python3
-alias pip=/usr/local/Cellar/python@3.9/3.9.1_6/bin/pip3
-```
-
-意思是指定一个版本的`python`和 `pip`。一种方式是可以`Homebrew`来安装。也可以从源代码构建安装。
-
-```shell
-make
-make test
-make install
-```
-
-```shell
-$ redis-server
-87684:C 10 Mar 2021 14:46:06.056 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-87684:C 10 Mar 2021 14:46:06.056 # Redis version=6.2.1, bits=64, commit=00000000, modified=0, pid=87684, just started
-87684:C 10 Mar 2021 14:46:06.056 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
-87684:M 10 Mar 2021 14:46:06.057 * Increased maximum number of open files to 10032 (it was originally set to 4864).
-87684:M 10 Mar 2021 14:46:06.057 * monotonic clock: POSIX clock_gettime
-...
-Redis 6.2.1 (00000000/0) 64 bit
-...
-87684:M 10 Mar 2021 14:46:06.058 # Server initialized
-87684:M 10 Mar 2021 14:46:06.058 * Ready to accept connections
-```
-
-这里节选了一点内容。可见我们已经安装上了。版本号`6.2.1`，是官网最新的。打开另外一个终端窗口。可以试着把玩一下：
-
-
-```shell
-$ redis-cli
-127.0.0.1:6379> set a 2
-OK
-127.0.0.1:6379> get a
-"2"
-```
-
-运行一下代码。
-
-```python
-import redis
-
-r = redis.Redis(host='localhost', port=6379, db=0)
-r.set('foo', 'bar')
-print(r.get('foo'))
-```
-
-输出：
-
-```shell
-$ python fib_redis.py
-b'bar'
-```
-
-当然，我们可以将斐波那契数列写成`Redis`版本的。这里留作练习好了。
 
 ## 练习
 
