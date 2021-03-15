@@ -445,3 +445,177 @@ print(add.__doc__)
 add something
 ```
 
+
+
+### 函数签名
+
+```python
+def add(a:int, b:int) -> int:
+  print(add.__annotations__)
+  return a+b
+
+add(1, 2)
+```
+
+```shell
+{'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
+```
+
+
+
+## 数据结构
+
+### 列表
+
+```python
+a = [1,2,3,4]
+
+a.append(5)
+print(a)   # [1, 2, 3, 4, 5]
+
+a[len(a):] = [6]
+print(a)   # [1, 2, 3, 4, 5, 6]
+
+a[3:] = [6]
+print(a)   # [1, 2, 3, 6]
+
+a.insert(0, -1)
+print(a)   # [-1, 1, 2, 3, 6]
+
+a.remove(1)
+print(a)   # [-1, 2, 3, 6]
+
+a.pop()
+print(a)  # [-1, 2, 3]
+
+a.clear() 
+print(a)  # []
+
+a[:] = [1, 2]
+print(a.count(1)) # 1
+
+a.reverse()
+print(a)   # [2, 1]
+
+b = a.copy()
+a[0] = 10
+print(b)   # [2, 1]
+print(a)   # [10, 1]
+
+b = a
+a[0] = 3
+print(b)  # [3, 1]
+print(a)  # [3, 1]
+```
+
+
+
+### 列表构造
+
+```python
+print(3 ** 2)   # 9
+print(3 ** 3)   # 27
+```
+
+先来学一种运算，`**`。这表示`次方`的意思。
+
+```python
+sq = []
+for x in range(10):
+  sq.append(x ** 2)
+  
+print(sq)  
+# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
+接着试试用`map`。
+
+```python
+a = map(lambda x:x, range(10))
+print(a)
+# <map object at 0x103bb0550>
+print(list(a))
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+```python
+sq = map(lambda x: x ** 2, range(10))
+print(list(sq))
+# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
+```python
+sq = [x ** 2 for x in range(10)]
+print(sq)
+# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+```
+
+可见`for`是很灵活的。
+
+```python
+a = [i for i in range(5)]
+print(a)
+# [0, 1, 2, 3, 4]
+
+a = [i+j for i in range(3) for j in range(3)]
+print(a)
+# [0, 1, 2, 1, 2, 3, 2, 3, 4]
+
+a = [i for i in range(5) if i % 2 == 0]
+print(a)
+# [0, 2, 4]
+
+a = [(i,i) for i in range(3)]
+print(a)
+# [(0, 0), (1, 1), (2, 2)]
+```
+
+
+
+### 嵌套列表构造
+
+```python
+matrix = [[(i+j*4) for i in range(4)] for j in range(3)]
+print(matrix)
+# [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
+
+t = []
+for j in range(3):
+  t.append([(i+j*4) for i in range(4)])
+print(t)
+# [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
+```
+
+注意这两段代码的方式。即是说：
+
+```python
+[[(i+j*4) for i in range(4)] for j in range(3)]
+```
+
+也就相当于：
+
+```python
+for j in range(3):
+   [(i+j*4) for i in range(4)]
+```
+
+也即相当于：
+
+```python
+for j in range(3):
+  for i in range(4):
+      (i+j*4) 
+```
+
+所以这方便用来做矩阵转置。
+
+```python
+matrix = [[(i+j*4) for i in range(4)] for j in range(3)]
+print(matrix)
+#  [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
+
+mt = [[row[j] for row in matrix] for j in range(4)]
+print(mt)
+# [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]]
+```
+
