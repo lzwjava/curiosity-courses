@@ -1,11 +1,15 @@
-import sys
+v = []
+for x in range(1000):
+   v.append(-1)
 
 def f(n):
-    if n < 2:
-        return n
-    else:
-        return f(n-1) + f(n-2)
-
-if __name__ == "__main__":
-    r = f(int(sys.argv[1]))
-    print(r)
+   if v[n] != -1:
+      return v[n]
+   else:
+      a = 0
+      if n < 2:
+         a = n
+      else:
+         a = f(n-1) + f(n-2)
+      v[n] = a
+      return v[n]
