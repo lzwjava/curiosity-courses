@@ -8,3 +8,5 @@ print(t)
 
 mt = [[row[j] for row in matrix] for j in range(4)]
 print(mt)
+
+print(list(zip(*matrix)))

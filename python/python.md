@@ -617,5 +617,174 @@ print(matrix)
 mt = [[row[j] for row in matrix] for j in range(4)]
 print(mt)
 # [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]]
+
+print(list(zip(*matrix)))
+[(0, 4, 8), (1, 5, 9), (2, 6, 10), (3, 7, 11)]
+```
+
+
+
+### del
+
+```python
+a = [1, 2, 3, 4]
+
+del a[1]
+print(a)  # [1, 3, 4]
+
+del a[0:2]
+print(a) # [4]
+
+del a
+print(a) # NameError: name 'a' is not defined
+```
+
+
+
+### 字典
+
+```python
+ages = {'li': 19, 'wang': 28, 'he' : 7}
+for name, age in ages.items():
+    print(name, age)
+
+# li 19
+# wang 28
+# he 7    
+
+for name in ages:
+    print(name)
+    
+# li
+# wang
+# he    
+
+for name, age in ages:
+     print(name)
+
+ValueError: too many values to unpack (expected 2)    
+
+for i, name in enumerate(['li', 'wang', 'he']):
+    print(i, name)
+
+# 0 li
+# 1 wang
+# 2 he    
+
+print(reversed([1, 2, 3]))
+# <list_reverseiterator object at 0x10701ffd0>
+
+print(list(reversed([1, 2, 3])))
+# [3, 2, 1]
+
+```
+
+
+
+### 模块
+
+### 脚本方式调用模块
+
+```python
+import sys
+
+def f(n):
+    if n < 2:
+        return n
+    else:
+        return f(n-1) + f(n-2)
+
+if __name__ == "__main__":
+    r = f(int(sys.argv[1]))
+    print(r)
+```
+
+```shell
+% python fib.py 3
+2
+```
+
+```shell
+% python -m fib 5
+5
+```
+
+
+
+### dir
+
+```python
+import fib
+
+print(dir(fib))
+```
+
+```python
+['__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'f', 'sys']
+```
+
+
+
+```python
+import builtins
+print(dir(builtins))
+
+['ArithmeticError', 'AssertionError', 'AttributeError', 'BaseException', 'BlockingIOError', 'BrokenPipeError', 'BufferError', 'BytesWarning', 'ChildProcessError', 'ConnectionAbortedError', 'ConnectionError', 'ConnectionRefusedError', 'ConnectionResetError', 'DeprecationWarning', 'EOFError', 'Ellipsis', 'EnvironmentError', 'Exception', 'False', 'FileExistsError', 'FileNotFoundError', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError', 'ImportError', 'ImportWarning', 'IndentationError', 'IndexError', 'InterruptedError', 'IsADirectoryError', 'KeyError', 'KeyboardInterrupt', 'LookupError', 'MemoryError', 'ModuleNotFoundError', 'NameError', 'None', 'NotADirectoryError', 'NotImplemented', 'NotImplementedError', 'OSError', 'OverflowError', 'PendingDeprecationWarning', 'PermissionError', 'ProcessLookupError', 'RecursionError', 'ReferenceError', 'ResourceWarning', 'RuntimeError', 'RuntimeWarning', 'StopAsyncIteration', 'StopIteration', 'SyntaxError', 'SyntaxWarning', 'SystemError', 'SystemExit', 'TabError', 'TimeoutError', 'True', 'TypeError', 'UnboundLocalError', 'UnicodeDecodeError', 'UnicodeEncodeError', 'UnicodeError', 'UnicodeTranslateError', 'UnicodeWarning', 'UserWarning', 'ValueError', 'Warning', 'ZeroDivisionError', '__build_class__', '__debug__', '__doc__', '__import__', '__loader__', '__name__', '__package__', '__spec__', 'abs', 'all', 'any', 'ascii', 'bin', 'bool', 'breakpoint', 'bytearray', 'bytes', 'callable', 'chr', 'classmethod', 'compile', 'complex', 'copyright', 'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval', 'exec', 'exit', 'filter', 'float', 'format', 'frozenset', 'getattr', 'globals', 'hasattr', 'hash', 'help', 'hex', 'id', 'input', 'int', 'isinstance', 'issubclass', 'iter', 'len', 'license', 'list', 'locals', 'map', 'max', 'memoryview', 'min', 'next', 'object', 'oct', 'open', 'ord', 'pow', 'print', 'property', 'quit', 'range', 'repr', 'reversed', 'round', 'set', 'setattr', 'slice', 'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 'vars', 'zip']
+```
+
+
+
+## 包
+
+包，即`pakages`。
+
+```shell
+pk.py
+fibp
+├── cal
+│   └── cal.py
+└── pt
+    └── pt.py
+```
+
+cal.py:
+
+```python
+def f(n):
+    if n < 2:
+        return n
+    else:
+        return f(n-1) + f(n-2)
+    
+def fl(n):
+    return list(map(f, range(5)))
+```
+
+`pt.py`:
+
+```python
+def p(l):
+    print(l, end=' ')
+
+def pln(l):
+    print(l)    
+```
+
+pk.py:
+
+```python
+import fibp.cal.cal
+import fibp.pt.pt
+
+fibp.pt.pt.p(fibp.cal.cal.fl(10))
+```
+
+`pk.py`也可以写成这样：
+
+```python
+from fibp.cal import cal
+from fibp.pt import pt
+
+pt.p(cal.fl(10))
 ```
 
