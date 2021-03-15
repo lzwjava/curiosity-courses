@@ -1,0 +1,447 @@
+## Python 编程
+
+通过之前的学习，我们已经对Python了解了一些。现在，根据官网文档我们继续补充一些Python的知识。
+
+
+
+## 代码流的控制
+
+### type
+
+```python
+print(type(1))
+```
+
+```shell
+<class 'int'>
+```
+
+```python
+print(type('a'))
+```
+
+```shell
+<class 'str'>
+```
+
+`type`函数很有用，来打印对象的类型。
+
+
+
+### range
+
+`range` 函数是非常很有用的。
+
+```python
+for i in range(5):
+  print(i, end = ' ')
+```
+
+```shell
+0 1 2 3 4
+```
+
+```python
+for i in range(2, 6, 2):
+  print(i, end = ' ')
+```
+
+```shell
+2 4
+```
+
+看`range`函数的定义。
+
+```python
+class range(Sequence[int]):
+    start: int
+    stop: int
+    step: int
+```
+
+可见是一个类。
+
+```python
+print(range(5))
+```
+
+```shell
+range(0, 5)
+```
+
+而不是：
+
+```shll
+[0,1,2,3,4]
+```
+
+继续。
+
+```python
+print(list(range(5)))
+```
+
+```shell
+[0, 1, 2, 3, 4]
+```
+
+为什么。看`list`的定义。
+
+```python
+class list(MutableSequence[_T], Generic[_T]):
+```
+
+list 的定义是`list(MutableSequence[_T], Generic[_T]):`。而`range`的定义是`class range(Sequence[int])。` list 继承了`MutableSequence`。range继承了`Sequence`。
+
+继续往下找是这样的。
+
+```python
+Sequence = _alias(collections.abc.Sequence, 1)
+MutableSequence = _alias(collections.abc.MutableSequence, 1)
+```
+
+这里我们不明白它俩的关系。但大概我们知道了为什么可以这样写`list(range(5))`。
+
+
+
+### 函数参数
+
+来看函数的补充知识。
+
+```python
+def fn(a = 3):
+  print(a)
+
+fn()
+```
+
+```shell
+3
+```
+
+这是给参数一个默认值。
+
+```python
+def fn(end: int, start = 1):
+  i = start
+  s = 0
+  while i < end:
+    s += i
+    i += 1
+  return s
+
+print(fn(10))
+```
+
+```shell
+45
+```
+
+`end`是必须要有的参数。注意到要把必须要有的参数写在最前面。
+
+```python
+def fn(start = 1, end: int):
+```
+
+```shell
+    def fn(start = 1, end: int):
+                              ^
+SyntaxError: non-default argument follows default argument
+```
+
+注意到`end`是`non-default argument`。`start`是`default argument`。意思是说，非默认参数跟在了默认参数后面。就是说必须把非默认参数放在所有默认参数前面。`start`是默认参数，即是如果不传递的话，默认已经有值了。
+
+```python
+def fn(a, /, b):
+  print(a + b)
+
+fn(1, 3)
+```
+
+这里`/`来把参数类型分隔。有两种形式的传递参数方式。一种是靠位置来传递，一种是靠指定关键词来传递。
+
+```python
+def fn(a, /, b):
+  print(a + b)
+
+fn(a=1, 3)
+```
+
+```shell
+    fn(a=1, 3)
+             ^
+SyntaxError: positional argument follows keyword argument
+```
+
+这样写就不行。`a=1`表示这是靠关键词来传递参数。这把它当做了一个关键词参数。而b则是位置参数。
+
+```python
+def f(pos1, pos2, /, pos_or_kwd, *, kwd1, kwd2):
+      -----------    ----------     ----------
+        |             |                  |
+        |        Positional or keyword   |
+        |                                - Keyword only
+         -- Positional only
+```
+
+注意这里定义函数时，用上`/`和`*`已经隐含了各参数的传递类型。所以得按规则传递。
+
+```python
+def fn(a, /, b):
+  print(a + b)
+
+fn(1, b=3)
+```
+
+上面这样就没报错。
+
+```python
+def fn(a, /, b, *, c):
+  print(a + b + c)
+
+fn(1, 3, 4)
+```
+
+```shell
+    fn(1, 3, 4)
+TypeError: fn() takes 2 positional arguments but 3 were given
+```
+
+`fn`只能接收2个位置参数，但是给了3个。
+
+```python
+def fn(a, /, b, *, c):
+  print(a + b + c)
+
+fn(a = 1, b=3, c=4)
+```
+
+```shell
+    fn(a = 1, b=3, c=4)
+TypeError: fn() got some positional-only arguments passed as keyword arguments: 'a'
+```
+
+fn有一些参数只能靠位置传递的现在则是用关键词来传递。
+
+
+
+### 映射形式的参数
+
+```python
+def fn(**kwds):
+  print(kwds)
+
+fn(**{'a': 1})
+```
+
+```shell
+{'a': 1}
+```
+
+```python
+def fn(**kwds):
+  print(kwds['a'])
+
+d = {'a': 1}
+fn(**d)
+```
+
+```shell
+1
+```
+
+可见`**`就是把参数展开。
+
+```python
+def fn(a, **kwds):
+  print(kwds['a'])
+
+d = {'a': 1}
+fn(1, **d)
+```
+
+```shell
+TypeError: fn() got multiple values for argument 'a'
+```
+
+像`fn(1, **d)`这样调用函数时，展开就是`fn(a=1, a=1)`。所以会出错。
+
+```python
+def fn(**kwds):
+  print(kwds['a'])
+
+d = {'a': 1}
+fn(d)
+```
+
+```shell
+TypeError: fn() takes 0 positional arguments but 1 was given
+```
+
+如果像`fn(d)`这样调用函数，会被当成是位置参数，而不是展开成关键词参数。
+
+```python
+def fn(a, / , **kwds):
+  print(kwds['a'])
+
+d = {'a': 1}
+fn(1, **d)
+```
+
+这样却行。说明位置参数和映射形式的参数可以同名。
+
+```python
+def fn(a, / , a):
+  print(a)
+
+d = {'a': 1}
+fn(1, **d)
+```
+
+```shell
+SyntaxError: duplicate argument 'a' in function definition
+```
+
+这样就出错了。注意这几种情况的微妙关系。
+
+```python
+def fn(a, / , **kwds):
+  print(kwds['a'])
+
+fn(1, **[1,2])
+```
+
+```shell
+TypeError: __main__.fn() argument after ** must be a mapping, not list
+```
+
+`**`后面必须跟着映射。
+
+
+
+### 可迭代类型的参数
+
+```python
+def fn(*kwds):
+  print(kwds)
+
+fn(*[1,2])
+```
+
+```shell
+(1, 2)
+```
+
+```python
+def fn(*kwds):
+  print(kwds)
+
+fn(*1)
+```
+
+```shell
+TypeError: __main__.fn() argument after * must be an iterable, not int
+```
+
+`*`必须跟着`iterable`。
+
+```python
+def fn(a, *kwds):
+  print(type(kwds))
+
+fn(1, *[1])
+```
+
+```shell
+<class 'tuple'>
+```
+
+打印一下类型。这也是为什么上面输出`(1,2)`，而不是`[1,2]`。
+
+```python
+def fn(*kwds):
+  print(kwds)
+
+fn(1, *[1])
+```
+
+```shell
+(1, 1)
+```
+
+注意到这里调用`fn(1, *[1])`时，就把参数展开了，成了`fn(1,1)`。然后在`fn(*kwds)`解析的时候，`kwds`又把`1,1`变成了元组`(1,1)`。
+
+```python
+def concat(*args, sep='/'):
+  return sep.join(args)
+
+print(concat('a','b','c', sep=','))
+```
+
+```shell
+a,b,c
+```
+
+
+
+### Lambda 表达式
+
+`lambda`就是把函数当做变量来保存。还记得在「解谜计算机科学」一文中所说的吗。
+
+```python
+def incrementor(n):
+  return lambda x: x + n
+
+f = incrementor(2)
+print(f(3))
+```
+
+```shell
+5
+```
+
+再看一个例子。
+
+```python
+pairs = [(1, 4), (2,1), (0, 3)]
+
+pairs.sort(key = lambda pair: pair[1])
+
+print(pairs)
+```
+
+```shell
+[(2, 1), (0, 3), (1, 4)]
+```
+
+```python
+pairs = [(1, 4), (2,1), (0, 3)]
+
+pairs.sort(key = lambda pair: pair[0])
+
+print(pairs)
+```
+
+```shell
+[(0, 3), (1, 4), (2, 1)]
+```
+
+`pair[0]`时，就按第一个数排序。`pair[1]`时，就按第二个数排序。
+
+
+
+### 文档注释
+
+```python
+def add():
+  """add something
+  """
+  pass
+
+print(add.__doc__)
+```
+
+```shell
+add something
+```
+
