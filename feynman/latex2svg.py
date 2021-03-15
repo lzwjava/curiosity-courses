@@ -86,10 +86,12 @@ def latex2svg(code, params=default_params, working_directory=None):
                 .replace('{{ preamble }}', params['preamble'])
                 .replace('{{ fontsize }}', str(fontsize))
                 .replace('{{ code }}', code))
+    
+    print(document)
 
     with open(os.path.join(working_directory, 'code.tex'), 'w') as f:
         f.write(document)
-
+    
     # Run LaTeX and create DVI file
     try:
         ret = subprocess.run(shlex.split(params['latex_cmd']+' code.tex'),

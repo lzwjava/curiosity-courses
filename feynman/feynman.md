@@ -1,5 +1,9 @@
 ## 项目实战：将费曼物理讲义网页做成电子书
 
+
+
+### 项目背景
+
 费曼物理讲义已经在公开在网上可以阅读。我想在`Kindle`上看它。然而因为它有挺多的数学公式。它最初的稿子应该是用`latex`做的。它用`mathjax`这个库来把`latex`格式的内容显示在网页上。
 
 举个例子。
@@ -100,4 +104,211 @@ svg.close()
 ```
 
 可以生成`svg`了。
+
+所以试试把`mathjax`中得到的`latex`文本都生成一下。
+
+```python
+from bs4 import BeautifulSoup
+from latex2svg import latex2svg
+
+file = open('The Feynman Lectures on Physics Vol. I Ch. 13_ Work and Potential Energy (A).html')
+content = file.read()
+
+soup = BeautifulSoup(content)
+
+mathjaxs = soup.findAll('script', {'type': 'math/tex'})
+for mathjax in mathjaxs:
+    print(mathjax.string)
+    out = latex2svg(mathjax.string)
+    print(out['svg'])
+```
+
+可惜出错了。
+
+```python
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['latex', '-interaction', 'nonstopmode', '-halt-on-error', 'code.tex']' returned non-zero exit status 1.
+```
+
+具体哪个公式错了呢。
+
+```latex
+\tfrac{1}{2}mv^2
+```
+
+
+
+## latex
+
+来学习一下`latex`。
+
+```latex
+\documentclass[12pt]{article}
+\usepackage{lingmacros}
+\usepackage{tree-dvips}
+\begin{document}
+
+\section*{Notes for My Paper}
+
+Don't forget to include examples of topicalization.
+They look like this:
+
+{\small
+\enumsentence{Topicalization from sentential subject:\\ 
+\shortex{7}{a John$_i$ [a & kltukl & [el & 
+  {\bf l-}oltoir & er & ngii$_i$ & a Mary]]}
+{ & {\bf R-}clear & {\sc comp} & 
+  {\bf IR}.{\sc 3s}-love   & P & him & }
+{John, (it's) clear that Mary loves (him).}}
+}
+
+\subsection*{How to handle topicalization}
+
+I'll just assume a tree structure like (\ex{1}).
+
+{\small
+\enumsentence{Structure of A$'$ Projections:\\ [2ex]
+\begin{tabular}[t]{cccc}
+    & \node{i}{CP}\\ [2ex]
+    \node{ii}{Spec} &   &\node{iii}{C$'$}\\ [2ex]
+        &\node{iv}{C} & & \node{v}{SAgrP}
+\end{tabular}
+\nodeconnect{i}{ii}
+\nodeconnect{i}{iii}
+\nodeconnect{iii}{iv}
+\nodeconnect{iii}{v}
+}
+}
+
+\subsection*{Mood}
+
+Mood changes when there is a topic, as well as when
+there is WH-movement.  \emph{Irrealis} is the mood when
+there is a non-subject topic or WH-phrase in Comp.
+\emph{Realis} is the mood when there is a subject topic
+or WH-phrase.
+
+\end{document}
+```
+
+网上找到一段样例的`latex`源码。
+
+```shell
+% latex code.tex
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex)
+ restricted \write18 enabled.
+entering extended mode
+(./code.tex
+LaTeX2e <2020-02-02> patch level 5
+L3 programming layer <2020-03-06>
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/size12.clo))
+(/usr/local/texlive/2020/texmf-dist/tex/latex/tree-dvips/lingmacros.sty)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/tree-dvips/tree-dvips.sty
+tree-dvips version .91 of May 16, 1995
+) (/usr/local/texlive/2020/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)
+(./code.aux) [1] (./code.aux) )
+Output written on code.dvi (1 page, 3416 bytes).
+Transcript written on code.log.
+```
+
+![latex](./img/latex.png)
+
+来对着源码和渲染后的效果，看看能学到什么。
+
+```latex
+\begin{document}
+\end{document}
+```
+
+这样来把文档裹起来。
+
+```latex
+\section*{Notes for My Paper}
+```
+
+这表示`section`标题开头。
+
+```latex
+\subsection*{How to handle topicalization}
+```
+
+这表示子标题。
+
+```latex
+\shortex{7}{a John$_i$ [a & kltukl & [el & 
+  {\bf l-}oltoir & er & ngii$_i$ & a Mary]]}
+```
+
+![shortex](./img/shortex.png)
+
+可见`$_i$`来表示下标。`{\bf l-}`来表示加粗。
+
+```latex
+\enumsentence{Structure of A$'$ Projections:\\ [2ex]
+\begin{tabular}[t]{cccc}
+    & \node{i}{CP}\\ [2ex]
+    \node{ii}{Spec} &   &\node{iii}{C$'$}\\ [2ex]
+        &\node{iv}{C} & & \node{v}{SAgrP}
+\end{tabular}
+\nodeconnect{i}{ii}
+\nodeconnect{i}{iii}
+\nodeconnect{iii}{iv}
+\nodeconnect{iii}{v}
+}
+```
+
+<img src="./img/node.png" alt="node" style="zoom:50%;" />
+
+注意到`nodeconnect`来表示连线。
+
+
+
+### 继续项目
+
+```latex
+\documentclass[16pt]{article}
+\usepackage{amsmath}
+\begin{document}
+
+\[\tfrac{1}{2}mv^2\]
+
+\end{document}
+```
+
+<img src="./img/frac.png" alt="frac" style="zoom:50%;" />
+
+这样可以正确地被渲染。在代码里无法被渲染，可能是因为没有加上`\usepackage{amsmath}`。
+
+```latex
+\documentclass[12pt,preview]{standalone}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage[libertine]{newtxmath}
+
+\begin{document}
+\begin{preview}
+\tfrac{1}{2}mv^2
+\end{preview}
+\end{document}
+```
+
+```shell
+! Missing $ inserted.
+<inserted text>
+                $
+l.12 \tfrac{1}{2}
+                 mv^2
+```
+
+这样出错了。而改成一下这样就可以。
+
+```latex
+\[\tfrac{1}{2}mv^2\]
+```
 
