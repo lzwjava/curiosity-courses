@@ -16,17 +16,18 @@
 * [作业1](./calculate/exercise.md)
 * [熟悉编程环境](./tools/tools.md)
 * [其它](./outline.md)
-* [试用 Rust 编程](./run/rust/rust.md)
-* [试用 Python 编程](./run/python/python.md)
-* [试用 C 编程](./run/c/c.md)
-* [试用 Java 编程](./run/java/java.md)
-* [Python编程进阶](./run/python/python.md)
+* [试用 Rust 编程](./rust/rust.md)
+* [试用 Python 编程](./python/python.md)
+* [试用 C 编程](./c/c.md)
+* [试用 Java 编程](./java/java.md)
+* [Python编程进阶](./python/python.md)
 * [如何上Google](./google/google.md)
 * [Web 编程](./web/web.md)
 * [云计算与大数据](./distributed/distributed.md)
 * [机器学习](./ml/ml.md)
 * [网上刷题](./oj/oj.md)
 * [Redis](./redis/redis.md)
+* [Python教程笔记](./tutorial/python.md)
 
 
 
