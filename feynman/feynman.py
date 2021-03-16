@@ -25,6 +25,7 @@ def wrap_svg(svg, equation = False):
         return svg    
         
 def to_svg(mathjaxs, equation=False):
+    i = 0
     for mathjax in mathjaxs:
         print(mathjax.string)
         wrap = wrap_latex(mathjax, equation=equation)
@@ -36,12 +37,17 @@ def to_svg(mathjaxs, equation=False):
         except subprocess.CalledProcessError as err:
             raise err
             # print(err)
-            # continue
-        node = BeautifulSoup(out['svg'], features="lxml")
+            # continue 
+        node = BeautifulSoup(out['svg'], features="lxml")        
         svg = node.find('svg')
         svg.attrs['style'] = 'vertical-align: middle;'
         p = wrap_svg(svg, equation=equation)
         mathjax.insert_after(p)
+        
+        f = open(f'svgs/{i}.svg', 'w')
+        f.write(out['svg'])
+        f.close()
+        i += 1
 
 def main():    
     file = open('The Feynman Lectures on Physics Vol. I Ch. 13_ Work and Potential Energy (A).html')
@@ -52,8 +58,8 @@ def main():
     clean_mathjax(soup, 'div', 'MathJax_Display')
     clean_mathjax(soup, 'span', 'MathJax_Preview')
     
-    mathjaxs = soup.findAll('script', {'type': 'math/tex'})
-    to_svg(mathjaxs, equation=False)
+    # mathjaxs = soup.findAll('script', {'type': 'math/tex'})
+    # to_svg(mathjaxs, equation=False)
     
     mathjaxs = soup.findAll('script', {'type': 'math/tex; mode=display'})   
     to_svg(mathjaxs, equation=True)
