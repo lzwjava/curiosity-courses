@@ -87,7 +87,7 @@ def latex2svg(code, params=default_params, working_directory=None):
                 .replace('{{ fontsize }}', str(fontsize))
                 .replace('{{ code }}', code))
     
-    # print(document)
+    print(document)
 
     with open(os.path.join(working_directory, 'code.tex'), 'w') as f:
         f.write(document)
