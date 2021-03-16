@@ -23,7 +23,7 @@
 * [Python编程进阶](./python/python.md)
 * [如何上Google](./google/google.md)
 * [Web 编程入门](./web/web.md)
-* [云计算与大数据分析入门](./distributed/distributed.md)
+* [云计算与大数据入门](./distributed/distributed.md)
 * [机器学习入门](./ml/ml.md)
 * [网上刷题](./oj/oj.md)
 * [Redis 入门](./redis/redis.md)
