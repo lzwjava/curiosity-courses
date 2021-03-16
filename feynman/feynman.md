@@ -399,6 +399,119 @@ output_file.close()
 
 ```
 
+这些我都在试探什么呢。
+
+```python
+    if 'FLP' in mathjax.string:
+        continue
+    elif 'Fig' in mathjax.string:
+        continue
+    elif 'eps' in mathjax.string:
+        continue
+```
+
+这里当解析到有`FLP`、`Fig`、`eps`在`latex`源码的时候，转换的过程出错了。
+
+例如，在`HTML中`，有这样的脚本：
+
+```html
+<script type="math/tex" id="MathJax-Element-11">\FLPF\cdot\FLPv</script>
+```
+
+解析拿到：
+
+```latex
+\FLPF\cdot\FLPv
+```
+
+当在代码里转换的时候出错了。也即，`latex2svg.py`出错了。这里就是用`latex`程序来转换。
+
+`code.tex`:
+
+```latex
+\documentclass[12pt,preview]{standalone}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage[libertine]{newtxmath}
+
+\begin{document}
+\begin{preview}
+\begin{equation}
+    \FLPF\cdot\FLPv
+\end{equation}
+\end{preview}
+\end{document}
+```
+
+```shell
+$latex code.tex
+! Undefined control sequence.
+l.13     \FLPF
+              \cdot\FLPv
+?
+```
+
+这到底是什么问题。我后来才注意到在`html`中的这段代码。
+
+```html
+<script type="text/x-mathjax-config;executed=true">
+      MathJax.Hub.Config({
+        TeX: {
+          Macros: {
+            FLPvec: ["\\boldsymbol{#1}", 1], Figvec: ["\\mathbf{#1}", 1], FLPC: ["\\FLPvec{C}", 0], FLPF: ["\\FLPvec{F}", 0], FLPa: ["\\FLPvec{a}", 0], FLPb: ["\\FLPvec{b}", 0], FLPr: ["\\FLPvec{r}", 0], FLPs: ["\\FLPvec{s}", 0], FLPv: ["\\FLPvec{v}", 0], ddt: ["\\frac{d#1}{d#2}", 2], epsO: ["\\epsilon_0", 0], FigC: ["\\Figvec{C}", 0]
+          }
+        }
+      });
+</script>
+```
+
+这表示网页在渲染的时候，给`MathJax`设置上了宏。所以我们的`latex`转换源码里也应该加上。来加上它们。
+
+```latex
+\documentclass[12pt,preview]{standalone}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage[libertine]{newtxmath}
+
+\newcommand{\FLPvec}[1]{\boldsymbol{#1}}
+\newcommand{\Figvec}[1]{\mathbf{#1}}
+\newcommand{\FLPC}{\FLPvec{C}}
+\newcommand{\FLPF}{\FLPvec{F}}
+\newcommand{\FLPa}{\FLPvec{a}}
+\newcommand{\FLPb}{\FLPvec{a}}
+\newcommand{\FLPr}{\FLPvec{r}}
+\newcommand{\FLPs}{\FLPvec{s}}
+\newcommand{\FLPv}{\FLPvec{v}}
+\newcommand{\ddt}[2]{\frac{d#1}{d#2}}
+\newcommand{\epsO}{\epsilon_0}
+\newcommand{\FigC}{\Figvec{C}}
+
+
+\begin{document}
+\begin{preview}
+\begin{equation}
+    \FLPF\cdot\FLPv
+\end{equation}
+\end{preview}
+\end{document}
+```
+
+这样就对了。
+
+![fv1](./img/fv1.png)
+
+
+
+
+
 ```shell
 pandoc -s -r html out.html -o feynman.epub
 ```
