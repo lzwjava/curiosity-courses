@@ -9,11 +9,19 @@ def clean_mathjax(soup, name, cls):
     previews = soup.findAll(name, {'class': cls})
     for preview in previews:
         preview.decompose()
+        
+def clean_script(soup):
+    scripts = soup.findAll('script')
+    for s in scripts:
+        s.decompose()    
 
 def wrap_latex(mathjax, equation = False):
+    wrap = ''
     if equation:
-        return mathjax.string
-    wrap = '$' + mathjax.string + '$'
+        wrap = mathjax.string
+    else:
+        wrap = '$' + mathjax.string + '$'
+    wrap = wrap.replace('label', 'tag')
     return wrap
  
 def wrap_svg(svg, equation):
@@ -23,8 +31,12 @@ def wrap_svg(svg, equation):
         return p.div
     else:
         return svg
-        
+
 def to_svg(mathjaxs, equation=False):
+    if equation:
+        svg_prefix = 'eq_'
+    else:
+        svg_prefix = 'in_'
     i = 0
     for mathjax in mathjaxs:     
         print(mathjax.string)
@@ -38,7 +50,21 @@ def to_svg(mathjaxs, equation=False):
             raise err
             # print(err)
             # continue 
+            
+        f = open(f'svgs/{svg_prefix}{i}.svg', 'w')
+        f.write(out['svg'])
+        f.close()
+        # i += 1
+        
         node = BeautifulSoup(out['svg'], features="lxml")        
+        svg = node.find('svg')
+        svg.attrs['style'] = 'vertical-align: middle;'
+        
+        # node = BeautifulSoup('<img>', features="lxml")
+        # img = node.find('img')
+        # img.attrs['src'] = f'./svgs/{svg_prefix}{i}.svg'
+        # img.attrs['style'] = 'vertical-align: middle; margin: 0.5em 0;'
+        
         svg = node.find('svg')
         svg.attrs['style'] = 'vertical-align: middle;'
         p = wrap_svg(svg, equation)
@@ -47,11 +73,9 @@ def to_svg(mathjaxs, equation=False):
             
         # print(out['width'])
         # print(out['height'])
+        i +=1
         
-        f = open(f'svgs/{i}.svg', 'w')
-        f.write(out['svg'])
-        f.close()
-        i += 1
+        
 
 def main():    
     file = open('The Feynman Lectures on Physics Vol. I Ch. 13_ Work and Potential Energy (A).html')
@@ -69,9 +93,13 @@ def main():
     mathjaxs = soup.findAll('script', {'type': 'math/tex; mode=display'})   
     to_svg(mathjaxs, equation=True)
     
+    clean_script(soup)
+    
     output_file = open('out.html', 'w')
     output_file.write(soup.prettify())
     output_file.close()
+    
+    
 
 main()
 

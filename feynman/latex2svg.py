@@ -53,7 +53,7 @@ latex_cmd = 'latex -interaction nonstopmode -halt-on-error'
 dvisvgm_cmd = 'dvisvgm --no-fonts'
 
 default_params = {
-    'fontsize': 12,  # pt
+    'fontsize': 14,  # pt
     'template': default_template,
     'preamble': default_preamble,
     'latex_cmd': latex_cmd,

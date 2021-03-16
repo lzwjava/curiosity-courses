@@ -1,6 +1,22 @@
 ## 项目实战：将费曼物理讲义网页做成电子书
 
+### 项目简介
 
+先大致讲讲项目情况。
+
+![feynman_online](./img/feynman_online.png)
+
+<img src="./img/change.JPG" alt="change" style="zoom:50%;" />
+
+![latex](./img/latex.JPG)
+
+![epub_black](./img/epub_black.JPG)
+
+![epub_beautiful](./img/epub_beautiful.JPG)
+
+做完项目后，有点开心。写下了这样一段话。
+
+写了一天代码，终于得到了漂亮的费曼物理讲义电子书！费曼物理讲义公开在网上，是用latex渲染的。人们常用latex来写论文，它对渲染公式很棒。而公开在网上，mathjax这个库则把latex变成了html代码，很多的div和span标签。电子书却不支持这种方式。想法是抓取网页，逆向mathjax渲染，接着替换成svg图片。这时出现了挺多问题，一个是源码有很多的latex自定义宏，需要加上；第二个是内嵌很多svg会有问题。如果是单个svg倒没问题，很多的时候会出现问题。大概是浏览器和svg的诡异Bug。这时只要把svg保存为文件，用img标签引入进来即可。公式也分为两种，一种是文本中间的公式，一种是单行的公式。所以，最后就得到了漂亮的电子书！
 
 ### 项目背景
 
@@ -13,12 +29,8 @@
 </span>
 <div class="MathJax_Display">
     <span class="MathJax MathJax_FullWidth" id="MathJax-Element-10-Frame" tabindex="0" style="">
-        <nobr>
-            <span class="math" id="MathJax-Span-151" style="width: 100%; display: inline-block; min-width: 11.088em;">
-                <span style="display: inline-block; position: relative; width: 100%; height: 0px; font-size: 106%; min-width: 11.088em;"><span style="position: absolute; clip: rect(3.069em, 1005.43em, 4.484em, -999.997em); top: -4.006em; left: 0em; width: 100%;"><span class="mrow" id="MathJax-Span-152"><span class="mtable" id="MathJax-Span-153" style="min-width: 11.088em;"><span style="display: inline-block; position: relative; width: 100%; height: 0px; min-width: 11.088em;"><span style="display: inline-block; position: absolute; width: 5.486em; height: 0px; clip: rect(-0.94em, 1005.43em, 0.475em, -999.997em); top: 0em; left: 50%; margin-left: -2.768em;"><span style="position: absolute; clip: rect(3.128em, 1005.43em, 4.484em, -999.997em); top: -4.006em; left: 0em;"><span style="display: inline-block; position: relative; width: 5.486em; height: 0px;"><span style="position: absolute; clip: rect(3.069em, 1005.43em, 4.425em, -999.997em); top: -4.006em; left: 50%; margin-left: -2.768em;"><span class="mtd" id="MathJax-Span-157"><span class="mrow" id="MathJax-Span-158"><span class="mi" id="MathJax-Span-159" style="font-family: MathJax_Math-italic;">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-160" style="font-family: MathJax_Math-italic;">T<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.121em;"></span></span><span class="texatom" id="MathJax-Span-161"><span class="mrow" id="MathJax-Span-162"><span class="mo" id="MathJax-Span-163" style="font-family: MathJax_Main;">/</span></span></span><span class="mi" id="MathJax-Span-164" style="font-family: MathJax_Math-italic;">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-165" style="font-family: MathJax_Math-italic;">t</span><span class="mo" id="MathJax-Span-166" style="font-family: MathJax_Main; padding-left: 0.298em;">=</span><span class="mi" id="MathJax-Span-167" style="font-family: MathJax_Math-italic; padding-left: 0.298em;">F<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.121em;"></span></span><span class="mi" id="MathJax-Span-168" style="font-family: MathJax_Math-italic;">v</span><span class="mo" id="MathJax-Span-169" style="font-family: MathJax_Main;">.</span></span></span><span style="display: inline-block; width: 0px; height: 4.012em;"></span></span></span><span style="display: inline-block; width: 0px; height: 4.012em;"></span></span></span><span style="display: inline-block; position: absolute; width: 2.538em; height: 0px; clip: rect(-0.881em, 1002.48em, 0.475em, -999.997em); top: 0em; right: 0em; margin-right: 0em;"><span style="position: absolute; clip: rect(3.069em, 1002.48em, 4.425em, -999.997em); top: -4.006em; right: 0em;"><span class="mtd" id="mjx-eqn-EqI133"><span class="mrow" id="MathJax-Span-155"><span class="mtext" id="MathJax-Span-156" style="font-family: MathJax_Main;">(13.3)</span></span></span><span style="display: inline-block; width: 0px; height: 4.012em;"></span></span></span></span></span></span><span style="display: inline-block; width: 0px; height: 4.012em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.372em; border-left: 0px solid; width: 0px; height: 1.253em;">
-                </span>
-            </span>
-        </nobr>
+              <span class="mi" id="MathJax-Span-159" style="font-family: MathJax_Math-italic;">d<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;">
+                </span>  
     </span>
 </div>
 <script type="math/tex; mode=display" id="MathJax-Element-10">\begin{equation}
@@ -28,7 +40,7 @@ dT/dt = Fv.
 </script>
 ```
 
-这一块`html`代码中。`script`标签下是`latex`的原样文本。`mathjax`把它变成很多的`span`。来显示它。
+上面是截取的一段`html`代码。这一块`html`代码中。`script`标签下是`latex`的原样文本。`mathjax`把它变成很多的`span`。来显示它。
 
 我们现在有个思路。就是把`mathjax`的显示方法改成`svg`图片。
 
@@ -365,5 +377,9 @@ output_file.close()
 # svg.write(out['svg'])
 # svg.close()
 
+```
+
+```shell
+pandoc -s -r html out.html -o feynman.epub
 ```
 
