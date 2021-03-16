@@ -16,9 +16,9 @@ def wrap_latex(mathjax, equation = False):
     wrap = '$' + mathjax.string + '$'
     return wrap
  
-def wrap_svg(svg, equation, width, height):
+def wrap_svg(svg, equation):
     if equation:
-        p = BeautifulSoup(f'<div style="text-align:center;width:{width}em;height:{height}em"></div>', features="lxml")
+        p = BeautifulSoup(f'<div style="text-align:center;"></div>', features="lxml")
         p.div.append(svg)
         return p.div
     else:
@@ -26,7 +26,7 @@ def wrap_svg(svg, equation, width, height):
         
 def to_svg(mathjaxs, equation=False):
     i = 0
-    for mathjax in mathjaxs:
+    for mathjax in mathjaxs:     
         print(mathjax.string)
         wrap = wrap_latex(mathjax, equation=equation)
         if wrap is None:
@@ -41,8 +41,10 @@ def to_svg(mathjaxs, equation=False):
         node = BeautifulSoup(out['svg'], features="lxml")        
         svg = node.find('svg')
         svg.attrs['style'] = 'vertical-align: middle;'
-        p = wrap_svg(svg, equation, out['width'], out['height'])
+        p = wrap_svg(svg, equation)
         mathjax.insert_after(p)
+        # if i%3 == 0:            
+            
         # print(out['width'])
         # print(out['height'])
         
@@ -59,6 +61,7 @@ def main():
     clean_mathjax(soup, 'span', 'MathJax')
     clean_mathjax(soup, 'div', 'MathJax_Display')
     clean_mathjax(soup, 'span', 'MathJax_Preview')
+    clean_mathjax(soup,  'p', 'p')
     
     # mathjaxs = soup.findAll('script', {'type': 'math/tex'})
     # to_svg(mathjaxs, equation=False)
