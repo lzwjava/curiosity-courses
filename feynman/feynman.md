@@ -508,11 +508,379 @@ l.13     \FLPF
 
 ![fv1](./img/fv1.png)
 
+来看看最后的代码。
 
+```python
+import subprocess
+from bs4 import BeautifulSoup
+from latex2svg import latex2svg
 
+def clean_mathjax(soup, name, cls):
+    previews = soup.findAll(name, {'class': cls})
+    for preview in previews:
+        preview.decompose()
+        
+def clean_script(soup):
+    scripts = soup.findAll('script')
+    for s in scripts:
+        s.decompose()    
 
+def wrap_latex(mathjax, equation = False):
+    wrap = ''
+    if equation:
+        wrap = mathjax.string
+    else:
+        wrap = '$' + mathjax.string + '$'
+    wrap = wrap.replace('label', 'tag')
+    return wrap
+ 
+def wrap_svg(svg, equation):
+    if equation:
+        p = BeautifulSoup(f'<div style="text-align:center;"></div>', features="lxml")
+        p.div.append(svg)
+        return p.div
+    else:
+        return svg
+
+def to_svg(mathjaxs, equation=False):
+    if equation:
+        svg_prefix = 'eq_'
+    else:
+        svg_prefix = 'in_'
+    i = 0
+    for mathjax in mathjaxs:     
+        print(mathjax.string)
+        wrap = wrap_latex(mathjax, equation=equation)   
+        out = {}
+        try:
+            out = latex2svg(wrap)   
+        except subprocess.CalledProcessError as err:
+            raise err      
+            
+        f = open(f'svgs/{svg_prefix}{i}.svg', 'w')
+        f.write(out['svg'])
+        f.close()
+        
+        node = BeautifulSoup('<img>', features="lxml")
+        img = node.find('img')
+        img.attrs['src'] = f'./svgs/{svg_prefix}{i}.svg'
+        img.attrs['style'] = 'vertical-align: middle; margin: 0.5em 0;'
+        
+        p = wrap_svg(img, equation)
+        mathjax.insert_after(p)
+        i +=1
+
+def main():    
+    file = open('The Feynman Lectures on Physics Vol. I Ch. 13_ Work and Potential Energy (A).html')
+    content = file.read()
+    
+    soup = BeautifulSoup(content, features="lxml")
+    clean_mathjax(soup, 'span', 'MathJax')
+    clean_mathjax(soup, 'div', 'MathJax_Display')
+    clean_mathjax(soup, 'span', 'MathJax_Preview')
+    
+    mathjaxs = soup.findAll('script', {'type': 'math/tex'})
+    to_svg(mathjaxs, equation=False)
+    
+    mathjaxs = soup.findAll('script', {'type': 'math/tex; mode=display'})   
+    to_svg(mathjaxs, equation=True)
+    
+    clean_script(soup)
+    
+    output_file = open('out.html', 'w')
+    output_file.write(soup.prettify())
+    output_file.close()    
+
+main()
+```
+
+当我们想转换整个电子书时，可以先用一个页面来试试。
+
+```python
+    file = open('The Feynman Lectures on Physics Vol. I Ch. 13_ Work and Potential Energy (A).html')
+    content = file.read()
+```
+
+这里便是下载了一个页面。
+
+`MathJax`生成了很多的`div`和`span`。意思是比如 `T+U=const`。MathJax这样来生成。
+
+```html
+<span class="MathJax">T</span>
+<span class="MathJax">+</span>
+<span class="MathJax">U</span>
+<span class="MathJax">=</span>
+<span class="MathJax">const</span>
+```
+
+这些很讨厌，也会影响我们的文本。因为已经有`svg`了，不需要这些了。
+
+```python
+def clean_mathjax(soup, name, cls):
+    previews = soup.findAll(name, {'class': cls})
+    for preview in previews:
+        preview.decompose()
+
+    clean_mathjax(soup, 'span', 'MathJax')
+    clean_mathjax(soup, 'div', 'MathJax_Display')
+    clean_mathjax(soup, 'span', 'MathJax_Preview')
+```
+
+把它们都去掉。
+
+```python
+    mathjaxs = soup.findAll('script', {'type': 'math/tex'})
+    to_svg(mathjaxs, equation=False)
+    
+    mathjaxs = soup.findAll('script', {'type': 'math/tex; mode=display'})   
+    to_svg(mathjaxs, equation=True)
+```
+
+注意到这里分成两种的`script`。
+
+```latex
+m(dv/dt)=F
+```
+
+这是内嵌形式的。
+
+```latex
+\begin{equation}
+\underset{\text{K.E.}}{\tfrac{1}{2}mv^2}+
+\underset{\text{P.E.}}{\vphantom{\tfrac{1}{2}}mgh}=\text{const},\notag
+```
+
+这是成段形式的。
+
+当时内嵌形式时，转换要在表达式左右加上`$`或`[]`。否则就有可能出错。
+
+```latex
+\begin{document}
+\begin{preview}
+\tfrac{1}{2}mv^2
+\end{preview}
+\end{document}
+```
+
+```shell
+! Missing $ inserted.
+<inserted text>
+                $
+l.26 \tfrac{1}{2}
+                 mv^2
+```
+
+得改成这样：
+
+```latex
+\begin{document}
+\begin{preview}
+$\tfrac{1}{2}mv^2$
+\end{preview}
+\end{document}
+```
+
+接下来看看如何转换`latex`成`svg`。
+
+```python
+    if equation:
+        svg_prefix = 'eq_'
+    else:
+        svg_prefix = 'in_'
+```
+
+```shell
+% tree svgs
+svgs
+├── eq_0.svg
+├── eq_1.svg
+├── in_0.svg
+```
+
+这样来保存`svg`。
+
+```python
+def wrap_latex(mathjax, equation = False):
+    wrap = ''
+    if equation:
+        wrap = mathjax.string
+    else:
+        wrap = '$' + mathjax.string + '$'
+    wrap = wrap.replace('label', 'tag')
+    return wrap
+```
+
+这里来对`latex`源码进行一些调整。注意到`label`变成了`tag`。
+
+![tag](./img/tag.png)
+
+注意右边的`(Eq:I:13:14)`。如果是`label`的话，则没解析成功。这会显示的是`(1)`。这里将就用`tag`表示一下，暂时没有深究。
+
+接着就进行调用`latex2svg.py`。
+
+```python
+        out = {}
+        try:
+            out = latex2svg(wrap)   
+        except subprocess.CalledProcessError as err:
+            raise err    
+```
+
+看看`latex2svg.py`。
+
+```python
+    # Run LaTeX and create DVI file
+    try:
+        ret = subprocess.run(shlex.split(params['latex_cmd']+' code.tex'),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             cwd=working_directory)
+        ret.check_returncode()
+    except FileNotFoundError:
+        raise RuntimeError('latex not found')
+```
+
+这里是在调用`latex`命令。
+
+```shell
+ % latex --help
+Usage: pdftex [OPTION]... [TEXNAME[.tex]] [COMMANDS]
+   or: pdftex [OPTION]... \FIRST-LINE
+   or: pdftex [OPTION]... &FMT ARGS
+  Run pdfTeX on TEXNAME, usually creating TEXNAME.pdf.
+```
+
+```python
+    try:
+        ret = subprocess.run(shlex.split(params['dvisvgm_cmd']+' code.dvi'),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             cwd=working_directory, env=env)
+        ret.check_returncode()
+    except FileNotFoundError:
+        raise RuntimeError('dvisvgm not found')
+```
+
+这里是在调用`dvisvgm`命令。
+
+```shell
+% dvisvgm
+dvisvgm 2.9.1
+
+This program converts DVI files, as created by TeX/LaTeX, as well as
+EPS and PDF files to the XML-based scalable vector graphics format SVG.
+
+Usage: dvisvgm [options] dvifile
+       dvisvgm --eps [options] epsfile
+       dvisvgm --pdf [options] pdffile
+```
+
+上面说的`latex`自定义宏写在哪儿呢。这里要改一下`latex2svg.py`。改改`default_preamble`。
+
+```python
+default_preamble = r"""
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage[libertine]{newtxmath}
+
+\newcommand{\FLPvec}[1]{\boldsymbol{#1}}
+\newcommand{\Figvec}[1]{\mathbf{#1}}
+\newcommand{\FLPC}{\FLPvec{C}}
+\newcommand{\FLPF}{\FLPvec{F}}
+\newcommand{\FLPa}{\FLPvec{a}}
+\newcommand{\FLPb}{\FLPvec{a}}
+\newcommand{\FLPr}{\FLPvec{r}}
+\newcommand{\FLPs}{\FLPvec{s}}
+\newcommand{\FLPv}{\FLPvec{v}}
+\newcommand{\ddt}[2]{\frac{d#1}{d#2}}
+\newcommand{\epsO}{\epsilon_0}
+\newcommand{\FigC}{\Figvec{C}}
+"""
+```
+
+转换成功后，写入到文件。
+
+```python
+        f = open(f'svgs/{svg_prefix}{i}.svg', 'w')
+        f.write(out['svg'])
+        f.close()
+```
+
+继续。
+
+```python
+        node = BeautifulSoup('<img>', features="lxml")
+        img = node.find('img')
+        img.attrs['src'] = f'./svgs/{svg_prefix}{i}.svg'
+        img.attrs['style'] = 'vertical-align: middle; margin: 0.5em 0;'
+```
+
+这里构造一个`img`标签。
+
+```python
+def wrap_svg(svg, equation):
+    if equation:
+        p = BeautifulSoup(f'<div style="text-align:center;"></div>', features="lxml")
+        p.div.append(svg)
+        return p.div
+    else:
+        return svg
+      
+p = wrap_svg(img, equation)
+```
+
+如果是独段的`latex`，那么用`div`包起来，并且居中。
+
+```python
+mathjax.insert_after(p)
+```
+
+这里把`div`标签或`img`标签加在原来的`script`后面。
+
+```python
+def clean_script(soup):
+    scripts = soup.findAll('script')
+    for s in scripts:
+        s.decompose()    
+        
+clean_script(soup)
+```
+
+把所有的`latex`替换完`svg`后，就不需要`script`了。把它们删掉，这样整洁一点。
+
+最后，再写入把修改后的整个`html`写入到一个文件里。
+
+```python
+    output_file = open('out.html', 'w')
+    output_file.write(soup.prettify())
+    output_file.close()    
+```
+
+接着用`pandoc`工具，转换成`epub`。
 
 ```shell
 pandoc -s -r html out.html -o feynman.epub
 ```
 
+这会打开，就是漂亮的电子书了。
+
+为什么不直接嵌入`svg`标签，而是用`img`来引入呢。即是说这样写：
+
+```html
+<p></p>
+<svg></svg>
+<p></p>
+```
+
+有个很奇怪的`bug`。当有很多的`svg`的时候，会出现这样的情况。
+
+<img src="./img/svg_p1.png" alt="svg_p1" style="zoom:40%;" />
+
+后来发现用`img`引入就行。至于为什么这样，没搞明白。当我把这单个的`svg`拿出来的时候，用浏览器看就没有问题。看来是在浏览器渲染非常多个`svg`时，就会出错。
+
+至于`epub`如何转成`mobi`，可以用`Kindle`的官方工具`Kindle Previewer 3`。注意这里只是一章。
+
+该项目代码在[feynman-lectures-mobi@lzwjava](https://github.com/lzwjava/feynman-lectures-mobi)。
+
+如何把所有的页面都抓取整理成电子书呢。后续再讲。但这费曼物理讲义一章也够看的了。好了，让我们拿起Kindle开始看吧。
