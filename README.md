@@ -28,7 +28,7 @@
 * [网上刷题](./oj/oj.md)
 * [Redis 入门](./redis/redis.md)
 * [Python教程笔记](./tutorial/python.md)
-* [项目实战：将费曼物理讲义网页做成电子书](./feynman/feynman.md)
+* [实战：将费曼物理讲义网页做成电子书](./feynman/feynman.md)
 
 
 
