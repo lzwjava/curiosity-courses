@@ -16,13 +16,13 @@ def wrap_latex(mathjax, equation = False):
     wrap = '$' + mathjax.string + '$'
     return wrap
  
-def wrap_svg(svg, equation = False):
+def wrap_svg(svg, equation, width, height):
     if equation:
-        p = BeautifulSoup('<div style="text-align:center;"></div>', features="lxml")
+        p = BeautifulSoup(f'<div style="text-align:center;width:{width}em;height:{height}em"></div>', features="lxml")
         p.div.append(svg)
-        return p
+        return p.div
     else:
-        return svg    
+        return svg
         
 def to_svg(mathjaxs, equation=False):
     i = 0
@@ -41,8 +41,10 @@ def to_svg(mathjaxs, equation=False):
         node = BeautifulSoup(out['svg'], features="lxml")        
         svg = node.find('svg')
         svg.attrs['style'] = 'vertical-align: middle;'
-        p = wrap_svg(svg, equation=equation)
+        p = wrap_svg(svg, equation, out['width'], out['height'])
         mathjax.insert_after(p)
+        # print(out['width'])
+        # print(out['height'])
         
         f = open(f'svgs/{i}.svg', 'w')
         f.write(out['svg'])
