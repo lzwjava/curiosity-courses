@@ -14,12 +14,6 @@ def wrap_latex(mathjax, equation = False):
     if equation:
         return mathjax.string
     wrap = '$' + mathjax.string + '$'
-    if 'FLP' in mathjax.string:
-        return None
-    elif 'Fig' in mathjax.string:
-        return None
-    elif 'eps' in mathjax.string:
-        return None
     return wrap
  
 def wrap_svg(svg, equation = False):
@@ -40,8 +34,9 @@ def to_svg(mathjaxs, equation=False):
         try:
             out = latex2svg(wrap)   
         except subprocess.CalledProcessError as err:
-            print(err)
-            continue
+            raise err
+            # print(err)
+            # continue
         node = BeautifulSoup(out['svg'], features="lxml")
         svg = node.find('svg')
         svg.attrs['style'] = 'vertical-align: middle;'
@@ -58,10 +53,10 @@ def main():
     clean_mathjax(soup, 'span', 'MathJax_Preview')
     
     mathjaxs = soup.findAll('script', {'type': 'math/tex'})
-    to_svg(mathjaxs, False)
+    to_svg(mathjaxs, equation=False)
     
     mathjaxs = soup.findAll('script', {'type': 'math/tex; mode=display'})   
-    to_svg(mathjaxs, True)
+    to_svg(mathjaxs, equation=True)
     
     output_file = open('out.html', 'w')
     output_file.write(soup.prettify())

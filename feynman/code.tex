@@ -7,12 +7,33 @@
 \usepackage{newtxtext}
 \usepackage[libertine]{newtxmath}
 
+\newcommand{\FLPvec}[1]{\boldsymbol{#1}}
+\newcommand{\Figvec}[1]{\mathbf{#1}}
+\newcommand{\FLPC}{\FLPvec{C}}
+\newcommand{\FLPF}{\FLPvec{F}}
+\newcommand{\FLPa}{\FLPvec{a}}
+\newcommand{\FLPb}{\FLPvec{a}}
+\newcommand{\FLPr}{\FLPvec{r}}
+\newcommand{\FLPs}{\FLPvec{s}}
+\newcommand{\FLPv}{\FLPvec{v}}
+\newcommand{\ddt}[2]{\frac{d#1}{d#2}}
+\newcommand{\epsO}{\epsilon_0}
+\newcommand{\FigC}{\Figvec{C}}
+
 \begin{document}
 \begin{preview}
-\begin{equation}
-\label{Eq:I:13:2}
-\ddt{T}{t}=\ddt{}{t}\,(\tfrac{1}{2}mv^2)=
-\tfrac{1}{2}m2v\,\ddt{v}{t}=mv\,\ddt{v}{t},
-\end{equation}
+    \begin{equation}
+        \underset{\text{K.E.}}{\tfrac{1}{2}mv^2}+
+        \underset{\text{P.E.}}{\vphantom{\tfrac{1}{2}}mgh}=\text{const},\notag
+        \end{equation}
+        \begin{equation}
+        \label{Eq:I:13:1}
+        T+U=\text{const}.
+        \end{equation}
+        \begin{equation}
+        \label{Eq:I:13:2}
+        \ddt{T}{t}=\ddt{}{t}\,(\tfrac{1}{2}mv^2)=
+        \tfrac{1}{2}m2v\,\ddt{v}{t}=mv\,\ddt{v}{t},
+    \end{equation}
 \end{preview}
 \end{document}

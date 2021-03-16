@@ -19,6 +19,7 @@ from ctypes.util import find_library
 default_template = r"""
 \documentclass[{{ fontsize }}pt,preview]{standalone}
 {{ preamble }}
+
 \begin{document}
 \begin{preview}
 {{ code }}
@@ -33,6 +34,19 @@ default_preamble = r"""
 \usepackage{amssymb}
 \usepackage{newtxtext}
 \usepackage[libertine]{newtxmath}
+
+\newcommand{\FLPvec}[1]{\boldsymbol{#1}}
+\newcommand{\Figvec}[1]{\mathbf{#1}}
+\newcommand{\FLPC}{\FLPvec{C}}
+\newcommand{\FLPF}{\FLPvec{F}}
+\newcommand{\FLPa}{\FLPvec{a}}
+\newcommand{\FLPb}{\FLPvec{a}}
+\newcommand{\FLPr}{\FLPvec{r}}
+\newcommand{\FLPs}{\FLPvec{s}}
+\newcommand{\FLPv}{\FLPvec{v}}
+\newcommand{\ddt}[2]{\frac{d#1}{d#2}}
+\newcommand{\epsO}{\epsilon_0}
+\newcommand{\FigC}{\Figvec{C}}
 """
 
 latex_cmd = 'latex -interaction nonstopmode -halt-on-error'
