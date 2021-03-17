@@ -292,3 +292,216 @@ if __name__ == "__main__":
     main()
 ```
 
+
+
+看看链接。
+
+```python
+    imgs = soup.find_all('img')
+    for img in imgs:
+        print(img)
+```
+
+```html
+scraping https://www.feynmanlectures.caltech.edu/I_01.html
+<img id="TwitLink" src=""/>
+<img id="FBLink" src=""/>
+<img id="MailLink" src=""/>
+<img id="MobileLink" src=""/>
+<img id="DarkModeLink" src=""/>
+<img id="DesktopLink" src=""/>
+<img src="img/camera.svg"/>
+<img src="img/FLP_I/f01-00/f01-00.jpg"/>
+<img data-src="img/FLP_I/f01-01/f01-01_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-02/f01-02_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-03/f01-03_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-04/f01-04_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-05/f01-05_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-06/f01-06_tc_big.svgz"/>
+<img class="first" data-src="img/FLP_I/f01-07/f01-07_tc_iPad_big_a.svgz"/>
+<img class="last" data-src="img/FLP_I/f01-07/f01-07_tc_iPad_big_b.svgz"/>
+<img data-src="img/FLP_I/f01-08/f01-08_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-09/f01-09_tc_big.svgz"/>
+<img data-src="img/FLP_I/f01-10/f01-10_tc_big.svgz"/>
+```
+
+
+
+https://www.feynmanlectures.caltech.edu/img/FLP_I/f01-01/f01-01_tc_big.svgz
+
+```shell
+Forbidden
+
+You don't have permission to access this resource.
+
+Apache/2.4.38 (Debian) Server at www.feynmanlectures.caltech.edu Port 443
+```
+
+
+
+```shell
+% pip install selenium
+Collecting selenium
+  Using cached selenium-3.141.0-py2.py3-none-any.whl (904 kB)
+Requirement already satisfied: urllib3 in /usr/local/lib/python3.9/site-packages (from selenium) (1.24.2)
+Installing collected packages: selenium
+Successfully installed selenium-3.141.0
+```
+
+
+
+```shell
+export CHROME_DRIVER_HOME=$HOME/dev-env/chromedriver
+export PATH="${PATH}:${CHROME_DRIVER_HOME}"
+```
+
+
+
+```shell
+% chromedriver -h
+Usage: chromedriver [OPTIONS]
+
+Options
+  --port=PORT                     port to listen on
+  --adb-port=PORT                 adb server port
+  --log-path=FILE                 write server log to file instead of stderr, increases log level to INFO
+  --log-level=LEVEL               set log level: ALL, DEBUG, INFO, WARNING, SEVERE, OFF
+  --verbose                       log verbosely (equivalent to --log-level=ALL)
+  --silent                        log nothing (equivalent to --log-level=OFF)
+  --append-log                    append log file instead of rewriting
+  --replayable                    (experimental) log verbosely and don't truncate long strings so that the log can be replayed.
+  --version                       print the version number and exit
+  --url-base                      base URL path prefix for commands, e.g. wd/url
+  --readable-timestamp            add readable timestamps to log
+  --enable-chrome-logs            show logs from the browser (overrides other logging options)
+  --allowed-ips                   comma-separated allowlist of remote IP addresses which are allowed to connect to ChromeDriver
+```
+
+
+
+```python
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
+
+with webdriver.Chrome() as driver:
+    wait = WebDriverWait(driver, 10)
+    driver.get("https://google.com/ncr")
+    driver.find_element(By.NAME, "q").send_keys("cheese" + Keys.RETURN)
+    first_result = wait.until(presence_of_element_located((By.CSS_SELECTOR, "h3>div")))
+    print(first_result.get_attribute("textContent"))
+```
+
+
+
+```python
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import presence_of_element_located
+import urllib
+
+def main():
+    driver = webdriver.Chrome()
+    wait = WebDriverWait(driver, 10)
+    driver.get("https://www.feynmanlectures.caltech.edu/I_01.html")
+    elements = driver.find_elements(By.TAG_NAME, "img")
+    # print(dir(elements[0]))
+    print(driver.page_source)
+    i = 0
+    for element in elements:
+        # src = element.get_attribute('src')
+        element.screenshot(f'images/{i}.png')        
+        i +=1                
+    driver.close()
+main()
+```
+
+```python
+from bs4 import BeautifulSoup
+from multiprocessing import Process
+import timeit
+from pathlib import Path
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+def img_path(chapter):
+    return f'./chapters/{chapter}/img'
+
+def img_name(url):
+    splits = url.split('/')
+    last = splits[len(splits) - 1]
+    parts = last.split('.')
+    name = parts[0]
+    return name
+
+def download_images(driver: webdriver.Chrome, chapter):        
+    path = img_path(chapter)
+    Path(path).mkdir(parents=True, exist_ok=True)    
+        
+    elements = driver.find_elements(By.TAG_NAME, "img")    
+    for element in elements:
+        src = element.get_attribute('src')
+        name = img_name(src)
+        element.screenshot(f'{path}/{name}.png')
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15'
+
+def scrape(chapter):
+    if chapter < 1 or chapter > 52:
+        raise Exception(f'chapter {chapter}')
+    chapter_str = '{:02d}'.format(chapter)
+    url = f'https://www.feynmanlectures.caltech.edu/I_{chapter_str}.html'
+    driver = webdriver.Chrome()
+    driver.get(url)
+    page_source = driver.page_source        
+    Path(f'./chapters/{chapter_str}').mkdir(parents=True, exist_ok=True)    
+    print(f'scraping {url}')
+        
+    download_images(driver, chapter_str)
+        
+    soup = BeautifulSoup(page_source, features='lxml')        
+    imgs = soup.find_all('img')
+    for img in imgs:
+        if 'src' in img.attrs or 'data-src' in img.attrs:
+            src = ''
+            if 'src' in img.attrs:
+                src = img.attrs['src']
+            elif 'data-src' in img.attrs:
+                src = img.attrs['data-src']
+                del img.attrs['data-src']
+            name = img_name(src)
+            img.attrs['src'] = f'img/{name}.png'                
+    
+    f = open(f'./chapters/{chapter_str}/I_{chapter_str}.html', 'w')
+    f.write(soup.prettify())
+    f.close()
+    
+    driver.close()
+        
+
+def main():
+    start = timeit.default_timer()
+    ps = [Process(target=scrape, args=(i+1,)) for i in range(2)]
+    for p in ps:
+        p.start()
+    for p in ps:
+        p.join()
+    stop = timeit.default_timer()
+    print('Time: ', stop - start) 
+
+if __name__ == "__main__":    
+    main()
+```
+
+```shell
+scraping https://www.feynmanlectures.caltech.edu/I_01.html
+scraping https://www.feynmanlectures.caltech.edu/I_02.html
+Time:  21.478510914999998
+```
+
