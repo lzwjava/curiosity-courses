@@ -505,3 +505,119 @@ scraping https://www.feynmanlectures.caltech.edu/I_02.html
 Time:  21.478510914999998
 ```
 
+
+
+```shell
+ errpipe_read, errpipe_write = os.pipe()
+OSError: [Errno 24] Too many open files
+```
+
+```shell
+ % ulimit a
+ulimit: invalid number: a
+lzw@lzwjava feynman-lectures-mobi % ulimit -a
+-t: cpu time (seconds)              unlimited
+-f: file size (blocks)              unlimited
+-d: data seg size (kbytes)          unlimited
+-s: stack size (kbytes)             8192
+-c: core file size (blocks)         0
+-v: address space (kbytes)          unlimited
+-l: locked-in-memory size (kbytes)  unlimited
+-u: processes                       2784
+-n: file descriptors                256
+```
+
+
+
+```shell
+12
+download_images
+12
+mathjax2svg
+latexs 128
+make_svg 0
+insert_svg 0
+make_svg 1
+insert_svg 1
+make_svg 2
+insert_svg 2
+make_svg 3
+insert_svg 3
+convert
+```
+
+
+
+```shell
+12
+download_images
+12
+mathjax2svg
+latexs 0
+latexs 0
+convert
+Time:  11.369145162
+```
+
+
+
+```shell
+% grep --include=\*.html -r '\$' *
+43/I_43.html:a long period of time $T$, have a certain number, $N$, of hits. If we
+43/I_43.html:number of collisions is proportional to the time $T$. We would like to
+43/I_43.html:We have written the constant of proportionality as $1/\tau$, where
+43/I_43.html:$\tau$ will have the dimensions of a time. The constant $\tau$ is the
+43/I_43.html:there are $60$ collisions; then $\tau$ is one minute. We would say
+43/I_43.html:that $\tau$ (one minute) is the
+```
+
+
+
+```shell
+错误	E21018: 解析文件中的内容时，创建改进的 Mobi 域名失败。内容：<In earlier chapters > 文件中： /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/069e0b8a-f12e-4102-aed3-977c0c3c1178/cTemp/mTemp/mobi-GxL1ye/OEBPS/c-49.xhtml 行： 969
+提醒	W28001: Kindle 阅读器不支持内容中指定的 CSS 样式。正在删除 CSS 属性： 'max-width' 文件中： /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/069e0b8a-f12e-4102-aed3-977c0c3c1178/cTemp/mTemp/mobi-GxL1ye/OEBPS/stylesheet.css
+提醒	W29004: 强制关闭的已打开标签为： <span amzn-src-id="985"> 文件中： /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/069e0b8a-f12e-4102-aed3-977c0c3c1178/cTemp/mTemp/mobi-GxL1ye/OEBPS/c-4.xhtml     行： 0000102
+提醒	W29004: 强制关闭的已打开标签为： <p amzn-src-id="975"> 文件中： /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/069e0b8a-f12e-4102-aed3-977c0c3c1178/cTemp/mTemp/mobi-GxL1ye/OEBPS/c-4.xhtml     行： 0000102
+```
+
+
+
+```shell
+提醒	W14001: 超链接出现问题，尚未解决：  /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/97c9cb4d-35f7-4920-81eb-4705325c482f/cTemp/mTemp/mobi-pvawPN/OEBPS/c-1.xhtml#Ch1-F1			
+提醒	W14001: 超链接出现问题，尚未解决：  /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/97c9cb4d-35f7-4920-81eb-4705325c482f/cTemp/mTemp/mobi-pvawPN/OEBPS/c-1.xhtml#Ch1-F2			
+提醒	W14001: 超链接出现问题，尚未解决：  /private/var/folders/_3/n3b7dq8x6652drmx6_d3t3bh0000gr/T/97c9cb4d-35f7-4920-81eb-4705325c482f/cTemp/mTemp/mobi-pvawPN/OEBPS/c-1.xhtml#Ch1-F3			
+```
+
+
+
+```html
+<span class="disabled" href="#Ch1-F1">
+          1–1
+</span>
+```
+
+
+
+```shell
+Rasterizing 'OEBPS/84b8b4179175f097be1180a10089107be75d7d85.svg' to 1264x1011
+Rasterizing 'OEBPS/23a4df37f269c8ed43f54753eb838b29cff538a1.svg' to 1264x259
+Traceback (most recent call last):
+  File "runpy.py", line 194, in _run_module_as_main
+  File "runpy.py", line 87, in _run_code
+  File "site.py", line 39, in <module>
+  File "site.py", line 35, in main
+  File "calibre/utils/ipc/worker.py", line 216, in main
+  File "calibre/gui2/convert/gui_conversion.py", line 41, in gui_convert_override
+  File "calibre/gui2/convert/gui_conversion.py", line 28, in gui_convert
+  File "calibre/ebooks/conversion/plumber.py", line 1274, in run
+  File "calibre/ebooks/conversion/plugins/mobi_output.py", line 214, in convert
+  File "calibre/ebooks/conversion/plugins/mobi_output.py", line 237, in write_mobi
+  File "calibre/ebooks/oeb/transforms/rasterize.py", line 55, in __call__
+  File "calibre/ebooks/oeb/transforms/rasterize.py", line 142, in rasterize_spine
+  File "calibre/ebooks/oeb/transforms/rasterize.py", line 152, in rasterize_item
+  File "calibre/ebooks/oeb/transforms/rasterize.py", line 185, in rasterize_external
+  File "calibre/ebooks/oeb/base.py", line 1092, in bytes_representation
+  File "calibre/ebooks/oeb/base.py", line 432, in serialize
+TypeError: cannot convert 'NoneType' object to bytes
+```
+
