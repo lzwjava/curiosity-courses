@@ -90,7 +90,7 @@ main()
 </html>
 ```
 
-
+试了试，说明`requests`的接口是能用的。
 
 ```html
      <div class="toc-chapter" id="C03">
@@ -150,13 +150,13 @@ main()
        </div>
 ```
 
-
+这是在目录页面中，第三章节的`html`代码。想从这里抓取每一章节的链接。`<a href="javascript:Goto(1,3,7)">`，可见是一个`javascript`的超链接。
 
 ```
 https://www.feynmanlectures.caltech.edu/I_03.html
 ```
 
-
+接着发现，每章节的路径是很有规律的。`I_03.html`表示第一卷第三章。
 
 ```python
 import requests
@@ -185,6 +185,8 @@ def main():
         
 main()
 ```
+
+来接着写写抓取代码。这里用到了`Process`。
 
 ```shell
     raise RuntimeError('''
@@ -620,4 +622,35 @@ Traceback (most recent call last):
   File "calibre/ebooks/oeb/base.py", line 432, in serialize
 TypeError: cannot convert 'NoneType' object to bytes
 ```
+
+
+
+```shell
+% kindlepreviewer feynman-lectures-on-physics-volumn-1.epub -convert
+Checking specified arguments.
+Pre-processing in progress.
+Processing 1/1 book(s).
+Book converted with warnings! : /Users/lzw/projects/feynman-lectures-mobi/feynman-lectures-on-physics-volumn-1.epub
+Post-processing in progress.
+Writing output/log files to /Users/lzw/projects/feynman-lectures-mobi/output
+```
+
+
+
+```shell
+Cleaning up manifest...
+Trimming unused files from manifest...
+Creating AZW3 Output...
+Serializing resources...
+Splitting markup on page breaks and flow limits, if any...
+Creating KF8 output
+	Generating KF8 markup...
+Tag table has no aid and a too large chunk size. Adding anyway.
+Tag table has no aid and a too large chunk size. Adding anyway.
+Tag table has no aid and a too large chunk size. Adding anyway.
+	Compressing markup...
+	Creating indices...
+```
+
+
 
