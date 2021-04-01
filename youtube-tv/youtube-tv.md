@@ -12,7 +12,7 @@
 
 接着在`SmartYoutubeTV`的设置选项，设置上端口就行了。
 
-![proxy1](/Users/lzw/curiosity-courses/youtube-tv/img/proxy1.jpeg)
+![proxy1](./img/proxy1.jpeg)
 
 设置完后。点击`测试`按钮试试看。注意到我这里用了`SOCKS`类型的代理。用`HTTP`的试过几次没成功。测试成功后，点击确定，然后测试看看。其次，你那里不一定设置成`192.168.1.3`，得看你电脑局域网地址是什么。
 
